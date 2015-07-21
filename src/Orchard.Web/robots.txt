@@ -1,0 +1,20 @@
+User-agent: *
+
+Disallow: /Users
+Disallow: /Tags
+Disallow: /rss
+Disallow: /Media
+Disallow: /Themes
+Disallow: /Modules
+Disallow: /App_Data
+Disallow: /Search
+
+# For multi-tenant websites using prefixes:
+Disallow: /*/Users
+Disallow: /*/Tags
+Disallow: /*/rss
+Disallow: /*/Media
+Disallow: /*/Themes
+Disallow: /*/Modules
+Disallow: /*/App_Data
+Disallow: /*/Search

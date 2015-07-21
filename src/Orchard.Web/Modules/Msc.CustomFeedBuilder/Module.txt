@@ -1,0 +1,18 @@
+﻿Name: Msc.CustomFeedBuilder
+AntiForgery: enabled
+Author: The Orchard Team
+Website: http://orchardproject.net
+Version: 1.0
+OrchardVersion: 1.0
+Description: Contains all custom feed builders
+Dependencies: Feeds
+Features:
+	Msc.CustomFeedBuilder.BlogFeedBuilder:
+		Description: Custom rss feed for Blogs
+		Dependencies: Feeds, Orchard.Tags
+	Msc.CustomFeedBuilder.Tenants:
+		Description: Provides an API to list all tenants
+		Dependencies: Orchard.MultiTenancy
+	Msc.BlogImport:
+		Description: Imports blog posts from RSS
+		Dependencies: Orchard.Blogs

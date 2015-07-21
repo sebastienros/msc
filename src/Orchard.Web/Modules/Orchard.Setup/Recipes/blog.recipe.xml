@@ -7,7 +7,6 @@
     <WebSite>http://orchardproject.net</WebSite>
     <Tags>blog</Tags>
     <Version>1.0</Version>
-    <IsSetupRecipe>true</IsSetupRecipe>
   </Recipe>
 
   <Feature enable="Orchard.Blogs,Orchard.Comments,Orchard.Tags,Orchard.Alias,Orchard.Autoroute,
@@ -15,9 +14,9 @@
                    TinyMce,Orchard.MediaLibrary,Orchard.PublishLater,
                    Orchard.jQuery,Orchard.Widgets,
                    Orchard.Scripting,Orchard.Scripting.Lightweight,
-                   PackagingServices,Orchard.Packaging,Orchard.Warmup,Orchard.OutputCache,
-                   Orchard.Taxonomies,Orchard.Workflows,
-                   TheThemeMachine" />
+                   PackagingServices,Orchard.Packaging,Orchard.OutputCache,
+                   Orchard.Taxonomies,
+                   TheBootstrapMachine" />
 
   <Metadata>
     <Types>
@@ -58,7 +57,7 @@
     widget create HtmlWidget /Title:"Second Leader Aside" /Zone:"TripelSecond" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget2" /UseLoremIpsumText:true
     widget create HtmlWidget /Title:"Third Leader Aside" /Zone:"TripelThird" /Position:"5" /Layer:"TheHomepage" /Identity:"SetupHtmlWidget3" /UseLoremIpsumText:true
     site setting set baseurl
-    theme activate "The Theme Machine"
+    theme activate "The Bootstrap Machine"
     menu create /MenuName:"Main Menu"
     blog create /Title:"Blog" /Homepage:true /Description:"This is your Orchard Blog."
     menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"

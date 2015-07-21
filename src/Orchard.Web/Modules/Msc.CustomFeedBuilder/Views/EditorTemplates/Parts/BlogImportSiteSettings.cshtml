@@ -1,0 +1,15 @@
+@model Msc.CustomFeedBuilder.Models.BlogImportSettingsPart
+
+<fieldset>
+    <legend>@T("Blog Import")</legend>
+    <div>
+        @Html.EditorFor(m => m.Uri)
+        <label  for="@Html.FieldIdFor(m => m.Uri)">@T("Url")</label>
+        <span class="hint">@T("Url of the RSS feed to import")</span>
+    </div>
+    <div>
+        @Html.EditorFor(m => m.Delay)
+        <label for="@Html.FieldIdFor(m => m.Delay)">@T("Delay")</label>
+        <span class="hint">@T("Interval between two imports, in minutes.")</span>
+    </div>
+</fieldset>
