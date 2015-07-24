@@ -63,7 +63,11 @@ namespace Orchard.Environment {
         }
 
         public ShellContext GetShellContext(ShellSettings shellSettings) {
-            return BuildCurrent().SingleOrDefault(shellContext => shellContext.Settings.Name.Equals(shellSettings.Name));
+            return GetShellContext(shellSettings.Name);
+        }
+
+        public ShellContext GetShellContext(string tenantName) {
+            return BuildCurrent().SingleOrDefault(shellContext => shellContext.Settings.Name.Equals(tenantName));
         }
 
         void IOrchardHost.Initialize() {

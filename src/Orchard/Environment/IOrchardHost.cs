@@ -27,6 +27,8 @@ namespace Orchard.Environment {
 
         ShellContext GetShellContext(ShellSettings shellSettings);
 
+        ShellContext GetShellContext(string tenantName);
+
         /// <summary>
         /// Can be used to build an temporary self-contained instance of a shell's configured code.
         /// Services may be resolved from within this instance to configure and initialize its storage.
