@@ -15,6 +15,7 @@ using Orchard.Utility.Extensions;
 using Orchard.Tags.Models;
 using Orchard.Blogs.Models;
 using Orchard.Environment.Extensions;
+using Orchard;
 
 namespace Msc.CustomFeedBuilder {
     [OrchardFeature("Msc.CustomFeedBuilder.BlogFeedBuilder")]
@@ -23,11 +24,14 @@ namespace Msc.CustomFeedBuilder {
         private readonly IContentManager _contentManager;
         private readonly RouteCollection _routes;
         private readonly IEnumerable<IHtmlFilter> _htmlFilters;
+        private readonly IOrchardServices _orchardServices;
 
         public BlogFeedBuilder(
+            IOrchardServices orchardServices,
             IContentManager contentManager,
             RouteCollection routes,
             IEnumerable<IHtmlFilter> htmlFilters) {
+            _orchardServices = orchardServices;
             _contentManager = contentManager;
             _routes = routes;
             _htmlFilters = htmlFilters;
@@ -35,7 +39,10 @@ namespace Msc.CustomFeedBuilder {
 
         public void Populate(FeedContext context) {
             if (context.ValueProvider.GetValue("blogaggregation") != null) {
-                XNamespace ns = "http://weblogs.asp.net/rssnamespace";
+
+                var baseUrl = new Uri(new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl), "rssnamespace");
+                XNamespace ns = baseUrl.ToString();
+
                 string description;
 
                 foreach (var feedItem in context.Response.Items.OfType<FeedItem<ContentItem>>()) {
