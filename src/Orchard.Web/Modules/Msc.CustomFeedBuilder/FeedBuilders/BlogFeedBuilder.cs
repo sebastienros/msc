@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.Mvc;
 using System.Web.Routing;
 using System.Xml.Linq;
 using JetBrains.Annotations;
@@ -9,15 +8,14 @@ using Orchard.ContentManagement;
 using Orchard.Core.Feeds;
 using Orchard.Core.Feeds.StandardBuilders;
 using Orchard.Core.Feeds.Models;
-using Orchard.Core.Common.Models;
 using Orchard.Services;
 using Orchard.Utility.Extensions;
-using Orchard.Tags.Models;
 using Orchard.Blogs.Models;
 using Orchard.Environment.Extensions;
 using Orchard;
 
-namespace Msc.CustomFeedBuilder {
+namespace Msc.CustomFeedBuilder
+{
     [OrchardFeature("Msc.CustomFeedBuilder.BlogFeedBuilder")]
     [UsedImplicitly]
     public class BlogFeedBuilder : IFeedItemBuilder {
