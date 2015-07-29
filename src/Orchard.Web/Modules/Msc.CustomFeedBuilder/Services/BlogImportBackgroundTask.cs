@@ -104,8 +104,15 @@ namespace Msc.CustomFeedBuilder.Services {
                                 newContentItem.BlogPart = blog;
                                 _contentManager.Create(newContentItem);
                             }
-                            
-                            newContentItem.As<BodyPart>().Text = item.Summary.Text;
+
+                            // inject link to original post if not already added by the source RSS
+                            var summary = item.Summary.Text;
+                            var sourceLink = item.Links.First().Uri.AbsoluteUri;
+                            if (-1 == summary.IndexOf(sourceLink, StringComparison.OrdinalIgnoreCase)) {
+                                summary += String.Format("<br><br><a href=\"{0}\">[Read more]</a>", sourceLink);
+                            }
+
+                            newContentItem.As<BodyPart>().Text = summary;
                             newContentItem.As<TitlePart>().Title = item.Title.Text;
                             newContentItem.As<CommonPart>().CreatedUtc = item.PublishDate.UtcDateTime;
 
