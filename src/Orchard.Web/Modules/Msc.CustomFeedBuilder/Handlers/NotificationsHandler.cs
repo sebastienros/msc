@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using Orchard.Blogs.Models;
 using Orchard.ContentManagement.Handlers;
@@ -35,7 +33,7 @@ namespace Msc.CustomFeedBuilder.Handlers {
                 CloudQueue queue = queueClient.GetQueueReference("updates");
 
                 // Create the queue if it doesn't already exist
-                queue.CreateIfNotExist();
+                queue.CreateIfNotExists();
 
                 BlogPart blogPart = blogPostPart.BlogPart;
 

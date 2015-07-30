@@ -159,7 +159,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
     <Content Include="Views\Commands\Execute.cshtml" />
   </ItemGroup>
   <PropertyGroup>
