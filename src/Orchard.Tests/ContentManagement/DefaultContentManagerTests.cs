@@ -105,12 +105,14 @@ namespace Orchard.Tests.ContentManagement {
                 return _session;
             }
 
-            void ITransactionManager.Demand() {
+            ISession ITransactionManager.Demand() {
                 EnsureSession();
 
                 if (_transaction == null) {
                     _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
                 }
+
+                return _session;
             }
 
             void ITransactionManager.RequireNew() {
