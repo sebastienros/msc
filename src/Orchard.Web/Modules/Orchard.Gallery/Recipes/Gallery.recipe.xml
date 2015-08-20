@@ -1,0 +1,65 @@
+﻿<?xml version="1.0"?>
+<Orchard>
+  <Recipe>
+    <Name>Package Gallery</Name>
+    <Description>Configures a packages gallery using the Orchard.Gallery module.</Description>
+    <Author>The Orchard Team</Author>
+    <WebSite>http://orchardproject.net</WebSite>
+    <Tags>developer</Tags>
+    <Version>1.0</Version>
+  </Recipe>
+
+  <Feature enable="Orchard.Gallery" />
+
+  <Metadata>
+    <Types>
+      <Package TypeIndexing.Indexes="Packages" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
+
+        <PackagePart />
+        <CommonPart OwnerEditorSettings.ShowOwnerEditor="true" DateEditorSettings.ShowDateEditor="false" />
+        <!-- Package description -->
+        <BodyPart BodyPartSettings.FlavorDefault="html" />
+        <!-- Package ID -->
+        <TitlePart />
+        <TagsPart />
+        <ContainerPart />
+      </Package>
+
+      <PackageVersion TypeIndexing.Indexes="PackageVersions" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
+        <CommonPart />
+        <!-- Changelog -->
+        <BodyPart BodyPartSettings.FlavorDefault="html" />
+        <ContainablePart ContainableTypePartSettings.ShowContainerPicker="false" ContainableTypePartSettings.ShowPositionEditor="false" />
+      </PackageVersion>
+
+      <CategoriesTerm Taxonomy="Categories" DisplayName="Categories Term">
+        <TermPart />
+        <TitlePart />
+        <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Taxonomy and Title', Pattern: '{Content.Container.Path}/{Content.Slug}', Description: 'my-taxonomy/my-term/sub-term'}]" AutorouteSettings.DefaultPatternIndex="0" />
+        <CommonPart />
+      </CategoriesTerm>
+
+    </Types>
+
+    <Parts>
+      <Package ContentPartSettings.Attachable="True">
+        <Categories.TaxonomyField DisplayName="Categories" FieldIndexing.Included="True" TaxonomyFieldSettings.Taxonomy="Categories" TaxonomyFieldSettings.LeavesOnly="False" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="True" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Please select the categories of the Module" />
+      </Package>
+
+      <!-- User profile information -->
+      <User ContentPartSettings.Attachable="True">
+        <DisplayName.TextField DisplayName="Display Name" TextFieldSettings.Required="False" TextFieldSettings.Flavor="Wide"/>
+        <Website.LinkField DisplayName="Website" LinkFieldSettings.LinkTextMode="Url" LinkFieldSettings.TargetMode="None" LinkFieldSettings.Required="False"/>
+      </User>
+    </Parts>
+  </Metadata>
+
+  <Command>
+    index create Packages
+    index update Packages
+
+    index create PackageVersions
+    index update PackageVersions
+  </Command>
+
+</Orchard>

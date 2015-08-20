@@ -1,0 +1,6 @@
+﻿<div class="tags">
+    @foreach (var t in Model.Tags) {
+        AppendMeta("keywords", t.TagName, ",");
+        <a class="tag label label-default" rel="tag" href="@Url.Action("Search", "Home", new { area = "Orchard.Tags", tagName = (string)t.TagName })">@t.TagName</a>
+    }
+</div>

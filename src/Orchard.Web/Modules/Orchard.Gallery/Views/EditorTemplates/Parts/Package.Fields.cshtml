@@ -1,0 +1,26 @@
+﻿@model Orchard.Gallery.Models.PackagePart
+
+<fieldset>
+    @Html.LabelFor(m => m.ExtensionType, T("Package Type"))
+    @Html.EnumDropDownListFor(x => x.ExtensionType)
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.ProjectUrl, T("Project Url"))
+    @Html.TextBoxFor(m => m.ProjectUrl, new { @class = "text large" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Copyright, T("Copyright"))
+    @Html.TextBoxFor(m => m.Copyright, new { @class = "text small" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.LicenseUrl, T("License Url"))
+    @Html.TextBoxFor(m => m.LicenseUrl, new { @class = "text large" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DownloadCount, T("Download Count"))
+    @Html.TextBoxFor(m => m.DownloadCount, new { @class = "text small" })
+</fieldset>

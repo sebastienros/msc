@@ -1,0 +1,16 @@
+﻿@model Orchard.Gallery.Models.PackageVersionPart
+
+<fieldset>
+    @Html.LabelFor(m => m.Version, T("Version"))
+    @Html.TextBoxFor(m => m.Version, new { @class = "text small" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.PackageUrl, T("Package Url"))
+    @Html.TextBoxFor(m => m.PackageUrl, new { @class = "text large" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.DownloadCount, T("Download Count"))
+    @Html.TextBoxFor(m => m.DownloadCount, new { @class = "text small" })
+</fieldset>

@@ -1,0 +1,14 @@
+﻿@using Orchard.ContentManagement;
+
+@{
+    ContentItem contentItem = Model.ContentItem;
+}
+
+<div class="media">
+    <div class="package-logo media-left">
+        <img alt="logo" src="//npmjs.org/static/images/npm-logo.svg">
+    </div>
+    <div class="media-body">
+        <h1>@Html.ItemDisplayLink(contentItem)</h1>
+    </div>
+</div>
