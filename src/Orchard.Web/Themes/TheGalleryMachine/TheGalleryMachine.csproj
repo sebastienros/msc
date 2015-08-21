@@ -73,6 +73,8 @@
   <ItemGroup>
     <Content Include="Content\favicon.ico" />
     <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Styles\styles.css" />
+    <Content Include="Styles\styles.min.css" />
     <Content Include="Theme.png" />
     <Content Include="Theme.txt" />
     <Content Include="ThemeZonePreview.png" />

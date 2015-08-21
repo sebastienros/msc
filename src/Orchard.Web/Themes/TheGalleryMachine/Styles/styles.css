@@ -7286,3 +7286,7 @@ ul.content-items {
 ul.content-items li {
   list-style: none;
 }
+.package-logo img {
+  width: 64px;
+  height: 64px;
+}

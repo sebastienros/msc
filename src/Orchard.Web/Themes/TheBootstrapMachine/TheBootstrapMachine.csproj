@@ -74,16 +74,10 @@
     <Content Include="Content\favicon.ico" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\html5shiv.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Styles\bootstrap\LICENSE" />
-    <Content Include="Styles\styles.css">
-      <DependentUpon>styles.less</DependentUpon>
-    </Content>
-    <Content Include="Styles\styles.min.css">
-      <DependentUpon>styles.css</DependentUpon>
-    </Content>
     <Content Include="Theme.png" />
     <Content Include="Theme.txt" />
     <Content Include="ThemeZonePreview.png" />
@@ -148,47 +142,47 @@
     <Content Include="Views\Parts.Common.Body.cshtml" />
     <Content Include="Views\Orchard.Users\Account\ChangePassword.cshtml" />
     <Content Include="Views\CommentText.cshtml" />
-    <Content Include="Styles\bootstrap\alerts.less" />
-    <Content Include="Styles\bootstrap\badges.less" />
-    <Content Include="Styles\bootstrap\bootstrap.less" />
-    <Content Include="Styles\bootstrap\breadcrumbs.less" />
-    <Content Include="Styles\bootstrap\button-groups.less" />
-    <Content Include="Styles\bootstrap\buttons.less" />
-    <Content Include="Styles\bootstrap\carousel.less" />
-    <Content Include="Styles\bootstrap\close.less" />
-    <Content Include="Styles\bootstrap\code.less" />
-    <Content Include="Styles\bootstrap\component-animations.less" />
-    <Content Include="Styles\bootstrap\dropdowns.less" />
-    <Content Include="Styles\bootstrap\forms.less" />
-    <Content Include="Styles\bootstrap\glyphicons.less" />
-    <Content Include="Styles\bootstrap\grid.less" />
-    <Content Include="Styles\bootstrap\input-groups.less" />
-    <Content Include="Styles\bootstrap\jumbotron.less" />
-    <Content Include="Styles\bootstrap\labels.less" />
-    <Content Include="Styles\bootstrap\list-group.less" />
-    <Content Include="Styles\bootstrap\media.less" />
-    <Content Include="Styles\bootstrap\mixins.less" />
-    <Content Include="Styles\bootstrap\modals.less" />
-    <Content Include="Styles\bootstrap\navbar.less" />
-    <Content Include="Styles\bootstrap\navs.less" />
-    <Content Include="Styles\bootstrap\normalize.less" />
-    <Content Include="Styles\bootstrap\pager.less" />
-    <Content Include="Styles\bootstrap\pagination.less" />
-    <Content Include="Styles\bootstrap\panels.less" />
-    <Content Include="Styles\bootstrap\popovers.less" />
-    <Content Include="Styles\bootstrap\print.less" />
-    <Content Include="Styles\bootstrap\progress-bars.less" />
-    <Content Include="Styles\bootstrap\responsive-utilities.less" />
-    <Content Include="Styles\bootstrap\scaffolding.less" />
-    <Content Include="Styles\bootstrap\tables.less" />
-    <Content Include="Styles\bootstrap\theme.less" />
-    <Content Include="Styles\bootstrap\thumbnails.less" />
-    <Content Include="Styles\bootstrap\tooltip.less" />
-    <Content Include="Styles\bootstrap\type.less" />
-    <Content Include="Styles\bootstrap\utilities.less" />
-    <Content Include="Styles\bootstrap\variables.less" />
-    <Content Include="Styles\bootstrap\wells.less" />
-    <Content Include="Styles\styles.less" />
+    <Content Include="Assets\bootstrap\alerts.less" />
+    <Content Include="Assets\bootstrap\badges.less" />
+    <Content Include="Assets\bootstrap\bootstrap.less" />
+    <Content Include="Assets\bootstrap\breadcrumbs.less" />
+    <Content Include="Assets\bootstrap\button-groups.less" />
+    <Content Include="Assets\bootstrap\buttons.less" />
+    <Content Include="Assets\bootstrap\carousel.less" />
+    <Content Include="Assets\bootstrap\close.less" />
+    <Content Include="Assets\bootstrap\code.less" />
+    <Content Include="Assets\bootstrap\component-animations.less" />
+    <Content Include="Assets\bootstrap\dropdowns.less" />
+    <Content Include="Assets\bootstrap\forms.less" />
+    <Content Include="Assets\bootstrap\glyphicons.less" />
+    <Content Include="Assets\bootstrap\grid.less" />
+    <Content Include="Assets\bootstrap\input-groups.less" />
+    <Content Include="Assets\bootstrap\jumbotron.less" />
+    <Content Include="Assets\bootstrap\labels.less" />
+    <Content Include="Assets\bootstrap\list-group.less" />
+    <Content Include="Assets\bootstrap\media.less" />
+    <Content Include="Assets\bootstrap\mixins.less" />
+    <Content Include="Assets\bootstrap\modals.less" />
+    <Content Include="Assets\bootstrap\navbar.less" />
+    <Content Include="Assets\bootstrap\navs.less" />
+    <Content Include="Assets\bootstrap\normalize.less" />
+    <Content Include="Assets\bootstrap\pager.less" />
+    <Content Include="Assets\bootstrap\pagination.less" />
+    <Content Include="Assets\bootstrap\panels.less" />
+    <Content Include="Assets\bootstrap\popovers.less" />
+    <Content Include="Assets\bootstrap\print.less" />
+    <Content Include="Assets\bootstrap\progress-bars.less" />
+    <Content Include="Assets\bootstrap\responsive-utilities.less" />
+    <Content Include="Assets\bootstrap\scaffolding.less" />
+    <Content Include="Assets\bootstrap\tables.less" />
+    <Content Include="Assets\bootstrap\theme.less" />
+    <Content Include="Assets\bootstrap\thumbnails.less" />
+    <Content Include="Assets\bootstrap\tooltip.less" />
+    <Content Include="Assets\bootstrap\type.less" />
+    <Content Include="Assets\bootstrap\utilities.less" />
+    <Content Include="Assets\bootstrap\variables.less" />
+    <Content Include="Assets\bootstrap\wells.less" />
+    <Content Include="Assets\Less\styles.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Orchard.Users\Account\LostPassword.cshtml" />
@@ -246,6 +240,45 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Menu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\bootstrap\responsive-embed.less" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Assets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\bootstrap\mixins\alerts.less" />
+    <Content Include="Assets\bootstrap\mixins\background-variant.less" />
+    <Content Include="Assets\bootstrap\mixins\border-radius.less" />
+    <Content Include="Assets\bootstrap\mixins\buttons.less" />
+    <Content Include="Assets\bootstrap\mixins\center-block.less" />
+    <Content Include="Assets\bootstrap\mixins\clearfix.less" />
+    <Content Include="Assets\bootstrap\mixins\forms.less" />
+    <Content Include="Assets\bootstrap\mixins\gradients.less" />
+    <Content Include="Assets\bootstrap\mixins\grid-framework.less" />
+    <Content Include="Assets\bootstrap\mixins\grid.less" />
+    <Content Include="Assets\bootstrap\mixins\hide-text.less" />
+    <Content Include="Assets\bootstrap\mixins\image.less" />
+    <Content Include="Assets\bootstrap\mixins\labels.less" />
+    <Content Include="Assets\bootstrap\mixins\list-group.less" />
+    <Content Include="Assets\bootstrap\mixins\nav-divider.less" />
+    <Content Include="Assets\bootstrap\mixins\nav-vertical-align.less" />
+    <Content Include="Assets\bootstrap\mixins\opacity.less" />
+    <Content Include="Assets\bootstrap\mixins\pagination.less" />
+    <Content Include="Assets\bootstrap\mixins\panels.less" />
+    <Content Include="Assets\bootstrap\mixins\progress-bar.less" />
+    <Content Include="Assets\bootstrap\mixins\reset-filter.less" />
+    <Content Include="Assets\bootstrap\mixins\reset-text.less" />
+    <Content Include="Assets\bootstrap\mixins\resize.less" />
+    <Content Include="Assets\bootstrap\mixins\responsive-visibility.less" />
+    <Content Include="Assets\bootstrap\mixins\size.less" />
+    <Content Include="Assets\bootstrap\mixins\tab-focus.less" />
+    <Content Include="Assets\bootstrap\mixins\table-row.less" />
+    <Content Include="Assets\bootstrap\mixins\text-emphasis.less" />
+    <Content Include="Assets\bootstrap\mixins\text-overflow.less" />
+    <Content Include="Assets\bootstrap\mixins\vendor-prefixes.less" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
