@@ -1,6 +1,34 @@
 ﻿@import "../../../TheBootstrapMachine/Assets/Less/styles.less";
 
-.package-logo img {
+@sidebar-title-color:     @brand-danger;
+
+.package-logo {
     width: 64px;
     height: 64px;
+}
+
+.sidebar {
+    h4 {
+        color: @sidebar-title-color;
+    }
+
+    ul.box {
+        padding-left: 0;
+        list-style: none;
+        
+        li {
+            line-height: 2.5em;
+            border-bottom: 1px solid @hr-border;
+        }
+     
+        li:last-of-type {
+            border-bottom: none;
+        }
+    }    
+
+    .gravatar {
+        height: @line-height-computed;
+        width: @line-height-computed;
+        border-radius:2px;
+    }
 }

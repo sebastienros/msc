@@ -1,5 +1,5 @@
 ﻿<Placement>
-    <Match ContentType="Package" DisplayType="Summary">
+    <Match ContentType="Package">
         <Place Parts_Tags_ShowTags="Tags"/>
     </Match>
 

@@ -7286,7 +7286,26 @@ ul.content-items {
 ul.content-items li {
   list-style: none;
 }
-.package-logo img {
+.package-logo {
   width: 64px;
   height: 64px;
+}
+.sidebar h4 {
+  color: #d9534f;
+}
+.sidebar ul.box {
+  padding-left: 0;
+  list-style: none;
+}
+.sidebar ul.box li {
+  line-height: 2.5em;
+  border-bottom: 1px solid #eeeeee;
+}
+.sidebar ul.box li:last-of-type {
+  border-bottom: none;
+}
+.sidebar .gravatar {
+  height: 20px;
+  width: 20px;
+  border-radius: 2px;
 }

@@ -41,19 +41,19 @@ namespace Orchard.Gallery.Models {
             set { this.Store(x => x.DownloadCount, value); }
         }
 
-        public string Copyright {
-            get { return this.Retrieve(x => x.Copyright); }
-            set { this.Store(x => x.Copyright, value); }
-        }
-
-        public string ProjectUrl {
-            get { return this.Retrieve(x => x.ProjectUrl); }
-            set { this.Store(x => x.ProjectUrl, value); }
+        public string License {
+            get { return this.Retrieve(x => x.License); }
+            set { this.Store(x => x.License, value); }
         }
 
         public string LicenseUrl {
             get { return this.Retrieve(x => x.LicenseUrl); }
             set { this.Store(x => x.LicenseUrl, value); }
+        }
+
+        public string ProjectUrl {
+            get { return this.Retrieve(x => x.ProjectUrl); }
+            set { this.Store(x => x.ProjectUrl, value); }
         }
     }
 }

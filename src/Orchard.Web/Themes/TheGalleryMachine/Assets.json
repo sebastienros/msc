@@ -2,7 +2,8 @@
   {
     "inputs": [ "Assets/Less/*.less" ],
     "output": "Styles/@.css",
-    "watch": [ "../TheBootstrapMachine/Assets/Less/*.less" ]
+    "watch": [ "../TheBootstrapMachine/Assets/Less/*.less" ],
+    "generateSourceMaps":  false
   },
   {
     "inputs": [ "Assets/TypeScript/*.ts" ],

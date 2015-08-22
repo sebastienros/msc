@@ -11,8 +11,9 @@
 </fieldset>
 
 <fieldset>
-    @Html.LabelFor(m => m.Copyright, T("Copyright"))
-    @Html.TextBoxFor(m => m.Copyright, new { @class = "text small" })
+    @Html.LabelFor(m => m.License, T("License"))
+    @Html.TextBoxFor(m => m.License, new { @class = "text small" })
+    <span class="hint">@T("Type of license, e.g. MIT, BSD, ...")</span>
 </fieldset>
 
 <fieldset>

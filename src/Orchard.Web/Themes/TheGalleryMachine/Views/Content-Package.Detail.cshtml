@@ -1,0 +1,63 @@
+﻿@using Orchard.ContentManagement;
+@using Orchard.Security;
+@{
+    ContentItem contentItem = Model.ContentItem;
+    var membership = WorkContext.Resolve<IMembershipService>();
+
+    string licenseUrl = Model.ContentItem.Package.PackagePart.LicenseUrl;
+    string license = Model.ContentItem.Package.PackagePart.License;
+    var owner = Model.ContentItem.Package.CommonPart.Owner;
+}
+
+<div class="row">
+    <div class="content col-sm-8">
+        <h1>
+            @Html.ItemDisplayText(contentItem) 
+        </h1>
+        
+        @Html.Raw(Model.ContentItem.Package.BodyPart.Text)
+
+    </div>
+    <div class="sidebar col-sm-4">
+        <a href="#" role="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
+
+        <ul class="box">
+            <li>
+                @if (owner != null) {
+                    @Display.Gravatar(
+                        Email: owner.Email, 
+                        Size: 100, 
+                        Classes: new[] { "gravatar" }
+                    )
+                    <span>@(owner.User.DisplayName.Value ?? owner.UserName)</span>
+                }
+            </li>
+            <li>
+                @T("published {0}", Display.DateTimeRelative(dateTimeUtc: Model.ContentItem.Package.CommonPart.CreatedUtc))
+            </li>
+            <li>
+                @if (!String.IsNullOrWhiteSpace(licenseUrl) &&
+                    !String.IsNullOrWhiteSpace(license)) {
+                    <a href="@licenseUrl">@license</a>
+                }
+                else if (!String.IsNullOrWhiteSpace(licenseUrl)) {
+                    <a href="@licenseUrl">@licenseUrl</a>
+                }
+                else {
+                    @T("{0} license", license)
+                }
+                </li>
+            <li>
+                <a href="@Model.ContentItem.Package.PackagePart.ProjectUrl">@Model.ContentItem.Package.PackagePart.ProjectUrl</a>
+            </li>
+        </ul>
+
+        <h4>Stats</h4>
+        @T("{0} downloads", Html.Raw("<strong>" + Model.ContentItem.Package.PackagePart.DownloadCount + "</strong>"))
+        
+        <h4>Tags</h4>
+        @Display(Model.Tags)
+
+    </div>
+</div>
+

@@ -1,7 +1,8 @@
 ﻿[
   {
     "inputs": [ "Assets/Less/*.less" ],
-    "output": "Styles/@.css"
+    "output": "Styles/@.css",
+    "generateSourceMaps":  false
   },
   {
     "inputs": [ "Assets/TypeScript/*.ts" ],
