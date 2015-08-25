@@ -1,0 +1,13 @@
+﻿@using Orchard.Gallery.Models;
+
+@{ 
+    PackagePart package = Model.Package;
+    IList<PackageVersionPart> packageVersions = Model.PackageVersions;
+}
+
+@foreach(var packageVersion in packageVersions) {
+    string version = packageVersion.Version;
+    @Html.ActionLink(version, "Display", "PackageVersion", new { id = package.Id, version = version }, null);
+    <span>@T(" - {0} downloads", packageVersion.DownloadCount)</span>
+}
+

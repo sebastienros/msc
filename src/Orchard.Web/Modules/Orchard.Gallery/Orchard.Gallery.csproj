@@ -90,12 +90,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\PackageVersionController.cs" />
-    <Compile Include="Drivers\TitlePartDriver.cs" />
     <Compile Include="Drivers\PackageVersionPartDriver.cs" />
     <Compile Include="Drivers\PackagePartDriver.cs" />
     <Compile Include="Handlers\PackageVersionPartHandler.cs" />
     <Compile Include="Handlers\PackagePartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\PackageVersionPartRecord.cs" />
+    <Compile Include="Models\PackagePartRecord.cs" />
     <Compile Include="Models\PackageVersionPart.cs" />
     <Compile Include="Models\PackagePart.cs" />
     <Compile Include="Controllers\PackageController.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Routes.cs" />
     <Compile Include="Services\PackageVersionIdResolverSelector.cs" />
     <Compile Include="Services\PackageIdResolverSelector.cs" />
+    <Compile Include="Services\PackageIdentityResolver.cs" />
     <Compile Include="Utils\TransferResult.cs" />
     <Compile Include="Utils\TransferToRouteResult.cs" />
   </ItemGroup>
@@ -133,7 +135,9 @@
     </Content>
     <Content Include="Web.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Parts.Package.PackageVersions.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Views\Package\Index.cshtml" />

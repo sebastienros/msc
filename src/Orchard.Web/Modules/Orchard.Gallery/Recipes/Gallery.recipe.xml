@@ -15,6 +15,7 @@
     <Types>
       <Package TypeIndexing.Indexes="Packages" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
 
+        <Package />
         <PackagePart />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="true" DateEditorSettings.ShowDateEditor="false" />
         <!-- Package description -->
@@ -22,14 +23,16 @@
         <!-- Package ID -->
         <TitlePart />
         <TagsPart />
-        <ContainerPart />
+        <ContainerPart ContainerTypePartSettings.AdminListViewName="Default" ContainerTypePartSettings.EnablePositioning="False" ContainerTypePartSettings.RestrictItemContentTypes="True" ContainerTypePartSettings.RestrictedItemContentTypes="PackageVersion" ContainerTypePartSettings.PaginatedDefault="True" ContainerTypePartSettings.PageSizeDefault="10" ContainerTypePartSettings.ItemsShownDefault="True"/>
+        
       </Package>
 
       <PackageVersion TypeIndexing.Indexes="PackageVersions" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
+        <PackageVersionPart />
         <CommonPart />
         <!-- Changelog -->
         <BodyPart BodyPartSettings.FlavorDefault="html" />
-        <ContainablePart ContainableTypePartSettings.ShowContainerPicker="false" ContainableTypePartSettings.ShowPositionEditor="false" />
+        <ContainablePart ContainableTypePartSettings.ShowContainerPicker="True" ContainableTypePartSettings.ShowPositionEditor="false" />
       </PackageVersion>
 
       <CategoriesTerm Taxonomy="Categories" DisplayName="Categories Term">
@@ -39,12 +42,23 @@
         <CommonPart />
       </CategoriesTerm>
 
+      <User>
+        <!-- To be able to add fields -->
+        <User/>
+      </User>
+
     </Types>
 
     <Parts>
-      <Package ContentPartSettings.Attachable="True">
+      <Package>
         <Categories.TaxonomyField DisplayName="Categories" FieldIndexing.Included="True" TaxonomyFieldSettings.Taxonomy="Categories" TaxonomyFieldSettings.LeavesOnly="False" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="True" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Please select the categories of the Module" />
       </Package>
+
+      <PackagePart ContentPartSettings.Attachable="True" 
+                   ContentPartSettings.Description="Turns a content type into a Package."/>
+      
+      <PackageVersionPart ContentPartSettings.Attachable="True" 
+                          ContentPartSettings.Description="Turns a content type into a Package Version."/>
 
       <!-- User profile information -->
       <User ContentPartSettings.Attachable="True">
@@ -62,4 +76,14 @@
     index update PackageVersions
   </Command>
 
+  <Data>
+
+    <Taxonomy Status="Published" Id="/alias=categories">
+      <CommonPart ModifiedUtc="2015-08-24T23:01:55.0440705Z" PublishedUtc="2015-08-24T23:01:55.1458496Z" CreatedUtc="2015-08-24T23:01:54.9339961Z" Owner="/User.UserName=admin"/>
+      <AutoroutePart UseCustomPattern="false" Alias="categories"/>
+      <TitlePart Title="Categories"/>
+      <TaxonomyPart TermTypeName="Categories"/>
+    </Taxonomy>
+
+  </Data>
 </Orchard>

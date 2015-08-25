@@ -1,5 +1,7 @@
-﻿using Orchard.ContentManagement;
+﻿using System;
+using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
+using Orchard.ContentManagement.Handlers;
 using Orchard.Gallery.Models;
 
 namespace Orchard.Gallery.Drivers {
@@ -25,6 +27,20 @@ namespace Orchard.Gallery.Drivers {
         protected override DriverResult Editor(PackageVersionPart part, IUpdateModel updater, dynamic shapeHelper) {
             updater.TryUpdateModel(part, Prefix, null, null);
             return Editor(part, shapeHelper);
+        }
+
+        protected override void Exporting(PackageVersionPart part, ExportContentContext context) {
+            var partElement = context.Element(part.PartDefinition.Name);
+
+            partElement.SetAttributeValue("DownloadCount", part.DownloadCount);
+            partElement.SetAttributeValue("PackageUrl", part.PackageUrl);
+            partElement.SetAttributeValue("Version", part.Version);
+        }
+
+        protected override void Importing(PackageVersionPart part, ImportContentContext context) {
+            part.DownloadCount = Int32.Parse(context.Attribute(part.PartDefinition.Name, "DownloadCount"));
+            part.PackageUrl = context.Attribute(part.PartDefinition.Name, "PackageUrl");
+            part.Version = context.Attribute(part.PartDefinition.Name, "Version");
         }
     }
 }

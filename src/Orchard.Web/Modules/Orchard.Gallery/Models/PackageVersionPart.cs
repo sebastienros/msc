@@ -3,7 +3,7 @@ using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 
 namespace Orchard.Gallery.Models {
-    public class PackageVersionPart : ContentPart {
+    public class PackageVersionPart : ContentPart<PackageVersionPartRecord> {
         public CommonPart CommonPart {
             get { return this.As<CommonPart>(); }
         }

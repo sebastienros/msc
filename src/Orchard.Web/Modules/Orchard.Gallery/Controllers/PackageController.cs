@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Orchard.ContentManagement;
+using Orchard.Gallery.Models;
 using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
@@ -53,16 +54,13 @@ namespace Orchard.Gallery.Controllers {
                 return HttpNotFound();
             }
 
-            var searchBuilder = GetSearchBuilder();
-
-            var document = searchBuilder
-                .WithField("type", "Package").ExactMatch()
-                .WithField("package-id", id.ToLowerInvariant()).ExactMatch()
-                .Slice(0, 1)
-                .Search()
+            var package = _orchardService.ContentManager
+                .Query<PackagePart, PackagePartRecord>()
+                .Where(p => p.PackageId == id)
+                .List()
                 .FirstOrDefault();
 
-            if (document == null) {
+            if (package == null) {
                 return HttpNotFound();
             }
 
@@ -70,7 +68,7 @@ namespace Orchard.Gallery.Controllers {
                 { "action", "Display" },
                 { "controller", "Item" },
                 { "area", "Containers" },
-                { "id", document.GetInt("id") }
+                { "id", package.Id }
             });
         }
 
@@ -82,7 +80,7 @@ namespace Orchard.Gallery.Controllers {
 
             if(!String.IsNullOrWhiteSpace(q)) {
                 searchBuilder.Parse(
-                    defaultFields: new[] { "body", "title", "tags" }, 
+                    defaultFields: new[] { "body", "title", "tags", "package-id" }, 
                     query: q, 
                     escape: true
                 );

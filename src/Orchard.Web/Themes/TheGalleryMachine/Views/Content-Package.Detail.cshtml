@@ -4,36 +4,38 @@
     ContentItem contentItem = Model.ContentItem;
     var membership = WorkContext.Resolve<IMembershipService>();
 
-    string licenseUrl = Model.ContentItem.Package.PackagePart.LicenseUrl;
-    string license = Model.ContentItem.Package.PackagePart.License;
-    var owner = Model.ContentItem.Package.CommonPart.Owner;
+    string licenseUrl = Model.ContentItem.PackagePart.LicenseUrl;
+    string license = Model.ContentItem.PackagePart.License;
+    var owner = Model.ContentItem.CommonPart.Owner;
 }
 
 <div class="row">
-    <div class="content col-sm-8">
+    <div class="col-sm-8">
         <h1>
-            @Html.ItemDisplayText(contentItem) 
+            @Html.ItemDisplayText(contentItem)
+            <a href="#" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
         </h1>
-        
-        @Html.Raw(Model.ContentItem.Package.BodyPart.Text)
+        <h2>
+            @Model.ContentItem.PackagePart.Summary
+        </h2>
 
+        @Html.Raw(Model.ContentItem.BodyPart.Text)
     </div>
-    <div class="sidebar col-sm-4">
-        <a href="#" role="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
 
+    <div class="sidebar col-sm-4">
         <ul class="box">
             <li>
                 @if (owner != null) {
                     @Display.Gravatar(
                         Email: owner.Email, 
-                        Size: 100, 
+                        Size: 25, 
                         Classes: new[] { "gravatar" }
                     )
                     <span>@(owner.User.DisplayName.Value ?? owner.UserName)</span>
                 }
             </li>
             <li>
-                @T("published {0}", Display.DateTimeRelative(dateTimeUtc: Model.ContentItem.Package.CommonPart.CreatedUtc))
+                @T("published {0}", Display.DateTimeRelative(dateTimeUtc: Model.ContentItem.CommonPart.CreatedUtc))
             </li>
             <li>
                 @if (!String.IsNullOrWhiteSpace(licenseUrl) &&
@@ -42,21 +44,28 @@
                 }
                 else if (!String.IsNullOrWhiteSpace(licenseUrl)) {
                     <a href="@licenseUrl">@licenseUrl</a>
+                } else if (!String.IsNullOrWhiteSpace(license)) { 
+                    @T("{0} license", license)
                 }
                 else {
-                    @T("{0} license", license)
+                    @T("no license information")
                 }
                 </li>
             <li>
-                <a href="@Model.ContentItem.Package.PackagePart.ProjectUrl">@Model.ContentItem.Package.PackagePart.ProjectUrl</a>
+                <a href="@Model.ContentItem.PackagePart.ProjectUrl">@Model.ContentItem.PackagePart.ProjectUrl</a>
             </li>
         </ul>
 
         <h4>Stats</h4>
-        @T("{0} downloads", Html.Raw("<strong>" + Model.ContentItem.Package.PackagePart.DownloadCount + "</strong>"))
+        @T("{0} downloads", Html.Raw("<strong>" + Model.ContentItem.PackagePart.DownloadCount + "</strong>"))
         
-        <h4>Tags</h4>
-        @Display(Model.Tags)
+        @if (HasText(Display(Model.Tags))) {
+            <h4>Tags</h4>
+            @Display(Model.Tags)
+        }
+
+        <h4>Versions</h4>
+        @Display(Model.PackageVersions)
 
     </div>
 </div>

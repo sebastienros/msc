@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Web.Script.Serialization;
 using Orchard.ContentManagement;
 using Orchard.Core.Common.Models;
 using Orchard.Core.Title.Models;
 using Orchard.Tags.Models;
 
 namespace Orchard.Gallery.Models {
-    public class PackagePart : ContentPart {
+    public class PackagePart : ContentPart<PackagePartRecord> {
 
         public enum ExtensionTypes {
             Module,
@@ -27,7 +29,60 @@ namespace Orchard.Gallery.Models {
         public BodyPart BodyPart {
             get { return this.As<BodyPart>(); }
         }
-        
+
+        public string PackageId {
+            get { return Retrieve(x => x.PackageId); }
+            set { Store(x => x.PackageId, value); }
+        }
+
+        public string Summary {
+            get { return this.Retrieve(x => x.Summary); }
+            set { this.Store(x => x.Summary, value); }
+        }
+
+        public Uri IconUrl {
+            get {
+                var iconUrl = Retrieve<string>("IconUrl") ?? "";
+                if(String.IsNullOrWhiteSpace(iconUrl)) {
+                    return null;
+                }
+
+                return new Uri(iconUrl);
+            }
+            set {
+                Store("IconUrl", value.ToString());
+            }
+        }
+
+        public Uri[] ScreenshotUrls {
+            get {
+                var screenshotUrls = Retrieve<string>("ScreenshotUrls") ?? "";
+                if (String.IsNullOrWhiteSpace(screenshotUrls)) {
+                    return new Uri[0];
+                }
+
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                return serializer.Deserialize<string[]>(screenshotUrls)
+                    .Select(x => new Uri(x))
+                    .ToArray();
+            }
+            set {
+                var screenshotUrls = value.Select(x => x.ToString()).ToArray();
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
+                Store("ScreenshotUrls", serializer.Serialize(screenshotUrls));
+            }
+        }
+
+        public string LatestVersion {
+            get { return this.Retrieve(x => x.LatestVersion); }
+            set { this.Store(x => x.LatestVersion, value); }
+        }
+
+        public DateTime LatestVersionUtc {
+            get { return this.Retrieve(x => x.LatestVersionUtc); }
+            set { this.Store(x => x.LatestVersionUtc, value); }
+        }
+
         /// <summary>
         /// Gets or sets the type of extension, <code>"module"</code> or <code>"theme"</code>
         /// </summary>

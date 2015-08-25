@@ -1,6 +1,16 @@
 ﻿@model Orchard.Gallery.Models.PackagePart
 
 <fieldset>
+    @Html.LabelFor(m => m.PackageId, T("Package Id"))
+    @Html.TextBoxFor(x => x.PackageId, new { @class = "text large required" })
+</fieldset>
+
+<fieldset>
+    @Html.LabelFor(m => m.Summary, T("Summary"))
+    @Html.TextBoxFor(x => x.Summary, new { @class = "text large" })
+</fieldset>
+
+<fieldset>
     @Html.LabelFor(m => m.ExtensionType, T("Package Type"))
     @Html.EnumDropDownListFor(x => x.ExtensionType)
 </fieldset>

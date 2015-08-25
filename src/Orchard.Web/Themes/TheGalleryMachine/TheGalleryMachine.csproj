@@ -85,6 +85,7 @@
     <Content Include="Assets.json" />
     <Content Include="Views\Content-Package.Detail.cshtml" />
     <None Include="Views\Content-Package.Summary.cshtml" />
+    <Content Include="Views\Parts.Package.PackageVersions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config">

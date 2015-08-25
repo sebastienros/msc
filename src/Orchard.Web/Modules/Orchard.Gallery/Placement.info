@@ -11,6 +11,7 @@
     <Place Parts_Package_Fields="-"/>
     <Place Parts_Package_Fields_Summary="Content"/>
     <Place Parts_Package_Fields_SummaryAdmin="-"/>
+    <Place Parts_Package_Versions="Content:10"/>    
   </Match>
 
   <Match DisplayType="SummaryAdmin">
