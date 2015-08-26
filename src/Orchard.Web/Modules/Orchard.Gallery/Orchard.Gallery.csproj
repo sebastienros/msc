@@ -119,10 +119,6 @@
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Orchard.Search\Orchard.Search.csproj">
-      <Project>{4be4eb01-ac56-4048-924e-2ca77f509aba}</Project>
-      <Name>Orchard.Search</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Orchard.Tags\Orchard.Tags.csproj">
       <Project>{5d0f00f0-26c9-4785-ad61-b85710c60eb0}</Project>
       <Name>Orchard.Tags</Name>

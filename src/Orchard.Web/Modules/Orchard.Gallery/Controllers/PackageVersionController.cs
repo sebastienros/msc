@@ -6,21 +6,17 @@ using Orchard.Gallery.Models;
 using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
-using Orchard.Search.Services;
 using Orchard.ContentManagement;
 
 namespace Orchard.Gallery.Controllers {
     public class PackageVersionController : Controller {
-        private readonly ISearchService _searchService;
         private readonly IIndexManager _indexManager;
         private readonly IOrchardServices _orchardService;
 
         public PackageVersionController(
             IOrchardServices orchardService,
-            ISearchService searchService,
             IIndexManager indexManager
             ) {
-            _searchService = searchService;
             _orchardService = orchardService;
             _indexManager = indexManager;
 

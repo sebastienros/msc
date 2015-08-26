@@ -7,23 +7,19 @@ using Orchard.Gallery.Models;
 using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
-using Orchard.Search.Services;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 
 namespace Orchard.Gallery.Controllers {
     [Themed]
     public class PackageController : Controller {
-        private readonly ISearchService _searchService;
         private readonly IIndexManager _indexManager;
         private readonly IOrchardServices _orchardService;
 
         public PackageController(
             IOrchardServices orchardService,
-            ISearchService searchService,
             IIndexManager indexManager
             ) {
-            _searchService = searchService;
             _orchardService = orchardService;
             _indexManager = indexManager;
 
@@ -87,7 +83,7 @@ namespace Orchard.Gallery.Controllers {
             }
 
             searchBuilder.WithField("package-extension-type", type.ToLowerInvariant()).NotAnalyzed().ExactMatch();
-            searchBuilder.SortByString("package-download-count");
+            searchBuilder.SortByInteger("package-download-count");
 
             var count = searchBuilder.Count();
             var pageOfResults = searchBuilder.Slice((pager.Page - 1) * pager.PageSize + 1, pager.PageSize).Search();
