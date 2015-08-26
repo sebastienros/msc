@@ -246,7 +246,6 @@
   <ItemGroup>
     <Content Include="Assets\bootstrap\responsive-embed.less" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="Assets.json" />
   </ItemGroup>
@@ -281,6 +280,15 @@
     <Content Include="Assets\bootstrap\mixins\text-emphasis.less" />
     <Content Include="Assets\bootstrap\mixins\text-overflow.less" />
     <Content Include="Assets\bootstrap\mixins\vendor-prefixes.less" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Elements\Button.cshtml" />
+    <Content Include="Views\Elements\Column.cshtml" />
+    <Content Include="Views\Elements\EmailField.cshtml" />
+    <Content Include="Views\Elements\Grid.cshtml" />
+    <Content Include="Views\Elements\Row.cshtml" />
+    <Content Include="Views\Elements\TextArea.cshtml" />
+    <Content Include="Views\Elements\TextField.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
