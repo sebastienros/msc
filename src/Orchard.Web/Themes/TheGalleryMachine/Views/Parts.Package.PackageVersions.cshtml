@@ -5,9 +5,11 @@
     IList<PackageVersionPart> packageVersions = Model.PackageVersions;
 }
 
-@foreach(var packageVersion in packageVersions) {
+@foreach (var packageVersion in packageVersions.Reverse()) {
     string version = packageVersion.Version;
-    @Html.ActionLink(version, "Display", "PackageVersion", new { id = package.Id, version = version }, null);
-    <span>@T(" - {0} downloads", packageVersion.DownloadCount)</span>
+    <div class="row">
+        <div class="col-xs-2 text-right"><a href="@Url.ItemDisplayUrl(packageVersion)">@version</a></div>
+        <div class="col-xs-10"><span>@T("{0} downloads", packageVersion.DownloadCount)</span></div>
+    </div>
 }
 

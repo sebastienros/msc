@@ -86,6 +86,9 @@
     <Content Include="Views\Content-Package.Detail.cshtml" />
     <None Include="Views\Content-Package.Summary.cshtml" />
     <Content Include="Views\Parts.Package.PackageVersions.cshtml" />
+    <Content Include="Views\Pager.cshtml" />
+    <Content Include="Views\Pager.Next.cshtml" />
+    <Content Include="Views\Pager.Previous.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config">
