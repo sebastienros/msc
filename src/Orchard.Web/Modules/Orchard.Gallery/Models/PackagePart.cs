@@ -50,7 +50,7 @@ namespace Orchard.Gallery.Models {
                 return new Uri(iconUrl);
             }
             set {
-                Store("IconUrl", value.ToString());
+                Store("IconUrl", value == null ? "" : value.ToString());
             }
         }
 
@@ -67,7 +67,7 @@ namespace Orchard.Gallery.Models {
                     .ToArray();
             }
             set {
-                var screenshotUrls = value.Select(x => x.ToString()).ToArray();
+                var screenshotUrls = (value ?? new Uri[0]).Select(x => x.ToString()).ToArray();
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
                 Store("ScreenshotUrls", serializer.Serialize(screenshotUrls));
             }

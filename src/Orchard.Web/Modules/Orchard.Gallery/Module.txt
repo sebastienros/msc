@@ -9,4 +9,4 @@ Features:
     Orchard.Gallery:        
         Description: Gallery website for Orchard modules and themes.        
         Category: Packaging
-        Dependencies: Orchard.Taxonomies, Orchard.Search, Lucene, Orchard.Tags, Containers
+        Dependencies: Orchard.Taxonomies, Lucene, Orchard.Tags, Orchard.Indexing, Containers

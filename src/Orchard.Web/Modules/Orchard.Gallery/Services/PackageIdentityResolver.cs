@@ -22,15 +22,15 @@ namespace Orchard.Gallery.Services {
         }
 
         private IEnumerable<ContentItem> ResolveIdentity(ContentIdentity identity) {
-            var identifier = identity.Get("package-id");
+            var packageId = identity.Get("package-id");
 
-            if (identifier == null) {
+            if (packageId == null) {
                 return null;
             }
 
             return _contentManager
-                .Query<PackagePart, PackagePartRecord>()
-                .Where(p => p.PackageId == identifier)
+                .Query<PackagePart, PackagePartRecord>(VersionOptions.Latest)
+                .Where(p => p.PackageId == packageId)
                 .List<ContentItem>();
         }
     }

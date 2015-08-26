@@ -10,7 +10,8 @@
   </Recipe>
 
   <Feature enable="Orchard.Gallery" />
-
+  <Feature enable="Markdown" />
+  
   <Metadata>
     <Types>
       <Package TypeIndexing.Indexes="Packages" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
@@ -19,7 +20,7 @@
         <PackagePart />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="true" DateEditorSettings.ShowDateEditor="false" />
         <!-- Package description -->
-        <BodyPart BodyPartSettings.FlavorDefault="html" />
+        <BodyPart BodyPartSettings.FlavorDefault="markdown" />
         <!-- Package ID -->
         <TitlePart />
         <TagsPart />
@@ -31,7 +32,7 @@
         <PackageVersionPart />
         <CommonPart />
         <!-- Changelog -->
-        <BodyPart BodyPartSettings.FlavorDefault="html" />
+        <BodyPart BodyPartSettings.FlavorDefault="markdown" />
         <ContainablePart ContainableTypePartSettings.ShowContainerPicker="True" ContainableTypePartSettings.ShowPositionEditor="false" />
       </PackageVersion>
 

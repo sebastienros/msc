@@ -12,6 +12,7 @@ namespace Orchard.Gallery.Handlers {
 
             OnPublished<PackageVersionPart>(UpdateStorage);
             OnImported<PackageVersionPart>(UpdateStorage);
+            OnRestored<PackageVersionPart>(UpdateStorage);
         }
 
         public void UpdateStorage(ContentContextBase context, PackageVersionPart part) {
