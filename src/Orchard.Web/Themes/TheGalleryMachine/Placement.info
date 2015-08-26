@@ -15,6 +15,6 @@
   <Match ContentType="Package" DisplayType="Detail">
     <Place Parts_Tags_ShowTags="Tags"/>
     <Place Parts_Package_PackageVersions="PackageVersions"/>
-    <Place Parts_Common_Body="Content:2" />
+    <Place Parts_Common_Body="Body" />
   </Match>
 </Placement>
