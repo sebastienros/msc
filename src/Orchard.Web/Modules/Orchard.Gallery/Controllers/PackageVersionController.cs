@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Orchard.Gallery.Models;
 using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.Search.Services;
+using Orchard.ContentManagement;
 
 namespace Orchard.Gallery.Controllers {
     public class PackageVersionController : Controller {
@@ -33,16 +35,14 @@ namespace Orchard.Gallery.Controllers {
                 return HttpNotFound();
             }
 
-            var searchBuilder = GetSearchBuilder();
+            var packageVersionId = id.ToLowerInvariant() + "/" + version;
 
-            var document = searchBuilder
-                .WithField("type", "PackageVersion").ExactMatch()
-                .WithField("package-version-id", id.ToLowerInvariant() + "/" + version).ExactMatch()
-                .Slice(0, 1)
-                .Search()
-                .FirstOrDefault();
+            var packageVersion = _orchardService.ContentManager.Query<PackageVersionPart, PackageVersionPartRecord>()
+                            .Where(p => p.PackageVersionId == packageVersionId)
+                            .List()
+                            .FirstOrDefault();
 
-            if (document == null) {
+            if (packageVersion == null) {
                 return HttpNotFound();
             }
 
@@ -50,7 +50,7 @@ namespace Orchard.Gallery.Controllers {
                 { "action", "Display" },
                 { "controller", "Item" },
                 { "area", "Contents" },
-                { "id", document.GetInt("id") }
+                { "id", packageVersion.Id }
             });
         }
 

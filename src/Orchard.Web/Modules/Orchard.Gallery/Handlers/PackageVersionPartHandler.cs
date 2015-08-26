@@ -10,39 +10,23 @@ namespace Orchard.Gallery.Handlers {
         public PackageVersionPartHandler(IRepository<PackageVersionPartRecord> repository) {
             Filters.Add(StorageFilter.For(repository));
 
-            OnUpdated<PackageVersionPart>((context, part) => {
+            OnPublished<PackageVersionPart>(UpdateStorage);
+            OnImported<PackageVersionPart>(UpdateStorage);
+        }
 
-                part.Record.NormalizedVersion = GetNormalizedVersion(part.Version);
+        public void UpdateStorage(ContentContextBase context, PackageVersionPart part) {
+            part.Record.NormalizedVersion = GetNormalizedVersion(part.Version);
 
-                // Update package information
-                var container = part.CommonPart.Container.As<PackagePart>();
-                if(container != null) {
-                    if (GetNormalizedVersion(container.LatestVersion) < GetNormalizedVersion(part.Version)) {
-                        container.LatestVersionUtc = part.CommonPart.ModifiedUtc.Value;
-                        container.LatestVersion = part.Version;
-                    }
+            // Update package information
+            var container = part.CommonPart.Container.As<PackagePart>();
+            if (container != null) {
+                part.Record.PackageVersionId = container.PackageId.ToLowerInvariant() + "/" + part.Version;
+
+                if (GetNormalizedVersion(container.LatestVersion) < GetNormalizedVersion(part.Version)) {
+                    container.LatestVersionUtc = part.CommonPart.ModifiedUtc.Value;
+                    container.LatestVersion = part.Version;
                 }
-            });
-
-            OnIndexing<PackageVersionPart>((context, part) => {
-
-                var container = part.CommonPart.Container.As<PackagePart>();
-
-                if (container != null) {
-                    context.DocumentIndex
-                        .Add("package-extension-type", container.ExtensionType.ToString()).Store()
-                        .Add("package-id", container.PackageId.ToLowerInvariant()).Analyze().Store()
-                        ;
-
-                    if (container != null && !String.IsNullOrWhiteSpace(container.TitlePart.Title)) {
-                        context.DocumentIndex.Add(
-                            "package-version-id",
-                            container.PackageId.ToLowerInvariant() + "/" + part.Version
-                        ).Store();
-                    }
-                }
-
-            });
+            }
         }
 
         protected override void GetItemMetadata(GetContentItemMetadataContext context) {
@@ -74,20 +58,28 @@ namespace Orchard.Gallery.Handlers {
         /// <summary>
         /// Creates a sortable version to order PackageVersion.
         /// </summary>
-        private int GetNormalizedVersion(string version) {
+        private long GetNormalizedVersion(string version) {
             if(String.IsNullOrWhiteSpace(version)) {
                 return 0;
             }
-
+            
             var versionParts = version.Split('.');
-            int normalizedVersion = Int32.Parse(versionParts[0]) * 1000000;
+            long normalizedVersion = 0;
+
+            if (versionParts.Length > 0) {
+                normalizedVersion += Math.Min(999, Int64.Parse(versionParts[0])) * 1000000000;
+            }
 
             if (versionParts.Length > 1) {
-                normalizedVersion += Int32.Parse(versionParts[1]) * 1000;
+                normalizedVersion += Math.Min(999, Int64.Parse(versionParts[1])) * 1000000;
             }
 
             if (versionParts.Length > 2) {
-                normalizedVersion += Int32.Parse(versionParts[2]);
+                normalizedVersion += Math.Min(999, Int64.Parse(versionParts[2])) * 1000;
+            }
+
+            if (versionParts.Length > 3) {
+                normalizedVersion += Int64.Parse(versionParts[3]);
             }
 
             return normalizedVersion;

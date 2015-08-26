@@ -1,5 +1,4 @@
-﻿using Orchard.ContentManagement.MetaData;
-using Orchard.Data.Migration;
+﻿using Orchard.Data.Migration;
 
 namespace Orchard.Gallery {
     public class Migrations : DataMigrationImpl {
@@ -9,13 +8,14 @@ namespace Orchard.Gallery {
             SchemaBuilder.CreateTable("PackagePartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("PackageId", c => c.WithLength(255).Unique())
+                    .Column<string>("PackageId", c => c.WithLength(1024).Unique())
                 );
 
             SchemaBuilder.CreateTable("PackageVersionPartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<int>("NormalizedVersion", c => c.WithDefault(0))
+                    .Column<long>("NormalizedVersion", c => c.WithDefault(0))
+                    .Column<string>("PackageVersionId", c => c.WithLength(1024).Unique())
                 );
 
             return 1;

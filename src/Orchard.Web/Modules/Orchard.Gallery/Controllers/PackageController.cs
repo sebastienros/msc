@@ -86,11 +86,11 @@ namespace Orchard.Gallery.Controllers {
                 );
             }
 
-            searchBuilder.WithField("package-extension-type", type.ToLowerInvariant()).ExactMatch();
+            searchBuilder.WithField("package-extension-type", type.ToLowerInvariant()).NotAnalyzed().ExactMatch();
             searchBuilder.SortByString("package-download-count");
 
             var count = searchBuilder.Count();
-            var pageOfResults = searchBuilder.Slice(0, 10).Search();
+            var pageOfResults = searchBuilder.Slice((pager.Page - 1) * pager.PageSize + 1, pager.PageSize).Search();
 
             var list = _orchardService.New.List();
             var foundIds = pageOfResults.Select(searchHit => searchHit.ContentItemId).ToList();

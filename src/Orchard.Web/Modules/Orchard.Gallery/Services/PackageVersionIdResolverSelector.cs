@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Orchard.ContentManagement;
-using Orchard.Core.Title.Models;
+using Orchard.Gallery.Models;
 
-namespace Orchard.Autoroute.Services {
-    public class PackageVersionIdResolverSelector : IIdentityResolverSelector {
+namespace Orchard.Gallery.Services {
+    public class PackageVersionIdentityResolverSelector : IIdentityResolverSelector {
         private readonly IContentManager _contentManager;
 
-        public PackageVersionIdResolverSelector(IContentManager contentManager) {
+        public PackageVersionIdentityResolverSelector(IContentManager contentManager) {
             _contentManager = contentManager;
         }
 
@@ -29,8 +29,8 @@ namespace Orchard.Autoroute.Services {
             }
 
             return _contentManager
-                .Query<TitlePart, TitlePartRecord>()
-                .Where(p => p.Title == identifier)
+                .Query<PackageVersionPart, PackageVersionPartRecord>()
+                .Where(p => p.PackageVersionId == identifier)
                 .List<ContentItem>();
         }
     }

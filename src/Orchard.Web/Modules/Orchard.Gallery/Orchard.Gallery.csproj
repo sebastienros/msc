@@ -103,7 +103,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Services\PackageVersionIdResolverSelector.cs" />
-    <Compile Include="Services\PackageIdResolverSelector.cs" />
     <Compile Include="Services\PackageIdentityResolver.cs" />
     <Compile Include="Utils\TransferResult.cs" />
     <Compile Include="Utils\TransferToRouteResult.cs" />
