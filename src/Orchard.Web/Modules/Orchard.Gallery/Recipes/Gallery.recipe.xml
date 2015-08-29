@@ -20,7 +20,7 @@
         <PackagePart />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="true" DateEditorSettings.ShowDateEditor="false" />
         <!-- Package description -->
-        <BodyPart BodyPartSettings.FlavorDefault="markdown" />
+        <BodyPart BodyTypePartSettings.Flavor="Markdown" />
         <!-- Package ID -->
         <TitlePart />
         <TagsPart />
@@ -32,7 +32,7 @@
         <PackageVersionPart />
         <CommonPart />
         <!-- Changelog -->
-        <BodyPart BodyPartSettings.FlavorDefault="markdown" />
+        <BodyPart BodyTypePartSettings.Flavor="Markdown" />
         <ContainablePart ContainableTypePartSettings.ShowContainerPicker="True" ContainableTypePartSettings.ShowPositionEditor="false" />
       </PackageVersion>
 

@@ -29,7 +29,10 @@ namespace Orchard.Gallery.Drivers {
                     var versions = _orchardServices.ContentManager
                         .Query<PackageVersionPart, PackageVersionPartRecord>()
                         .Where<CommonPartRecord>(x => x.Container.Id == part.Id)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.NormalizedVersion)
+                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMajor)
+                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMinor)
+                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionPatch)
+                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionBuild)
                         .List()
                         .ToList();
 
@@ -83,15 +86,46 @@ namespace Orchard.Gallery.Drivers {
         }
 
         protected override void Importing(PackagePart part, ImportContentContext context) {
-            part.DownloadCount = Int32.Parse(context.Attribute(part.PartDefinition.Name, "DownloadCount"));
-            part.ExtensionType = (PackagePart.ExtensionTypes)Enum.Parse(typeof(PackagePart.ExtensionTypes), context.Attribute(part.PartDefinition.Name, "ExtensionType"), true);
-            part.Store("IconUrl", context.Attribute(part.PartDefinition.Name, "IconUrl"));
-            part.License = context.Attribute(part.PartDefinition.Name, "License");
-            part.LicenseUrl = context.Attribute(part.PartDefinition.Name, "LicenseUrl");
-            part.PackageId = context.Attribute(part.PartDefinition.Name, "PackageId");
-            part.ProjectUrl = context.Attribute(part.PartDefinition.Name, "ProjectUrl");
-            part.Store("ScreenshotUrls", context.Attribute(part.PartDefinition.Name, "ScreenshotUrls"));
-            part.Summary = context.Attribute(part.PartDefinition.Name, "Summary");
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "DownloadCount", value => {
+                part.DownloadCount = Int32.Parse(value);
+            });
+            
+            context.ImportAttribute(part.PartDefinition.Name, "ExtensionType", value => {
+                part.ExtensionType = (PackagePart.ExtensionTypes)Enum.Parse(typeof(PackagePart.ExtensionTypes), value, true);
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "IconUrl", value => {
+                part.Store("IconUrl", value);
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "License", value => {
+                part.License = value;
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "LicenseUrl", value => {
+                part.LicenseUrl = value;
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "PackageId", value => {
+                part.PackageId = value;
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "ProjectUrl", value => {
+                part.ProjectUrl = value;
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "ScreenshotUrls", value => {
+                part.Store("ScreenshotUrls", value);
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "Summary", value => {
+                part.Summary = value;
+            });
         }
     }
 }

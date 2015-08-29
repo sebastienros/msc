@@ -38,9 +38,22 @@ namespace Orchard.Gallery.Drivers {
         }
 
         protected override void Importing(PackageVersionPart part, ImportContentContext context) {
-            part.DownloadCount = Int32.Parse(context.Attribute(part.PartDefinition.Name, "DownloadCount"));
-            part.PackageUrl = context.Attribute(part.PartDefinition.Name, "PackageUrl");
-            part.Version = context.Attribute(part.PartDefinition.Name, "Version");
+            // Don't do anything if the tag is not specified.
+            if (context.Data.Element(part.PartDefinition.Name) == null) {
+                return;
+            }
+
+            context.ImportAttribute(part.PartDefinition.Name, "DownloadCount", value => {
+                part.DownloadCount = Int32.Parse(value);
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "PackageUrl", value => {
+                part.PackageUrl = value;
+            });
+
+            context.ImportAttribute(part.PartDefinition.Name, "Version", value => {
+                part.Version = value;
+            });
         }
     }
 }

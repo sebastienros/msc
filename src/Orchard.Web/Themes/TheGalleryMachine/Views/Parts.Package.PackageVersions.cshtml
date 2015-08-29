@@ -5,7 +5,7 @@
     IList<PackageVersionPart> packageVersions = Model.PackageVersions;
 }
 
-@foreach (var packageVersion in packageVersions.Reverse()) {
+@foreach (var packageVersion in packageVersions) {
     string version = packageVersion.Version;
     <div class="row">
         <div class="col-xs-2 text-right"><a href="@Url.ItemDisplayUrl(packageVersion)">@version</a></div>

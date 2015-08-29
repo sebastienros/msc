@@ -95,6 +95,7 @@
     <Compile Include="Handlers\PackageVersionPartHandler.cs" />
     <Compile Include="Handlers\PackagePartHandler.cs" />
     <Compile Include="Migrations.cs" />
+    <Compile Include="Models\PackageVersion.cs" />
     <Compile Include="Models\PackageVersionPartRecord.cs" />
     <Compile Include="Models\PackagePartRecord.cs" />
     <Compile Include="Models\PackageVersionPart.cs" />

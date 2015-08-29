@@ -6,7 +6,10 @@ namespace Orchard.Gallery.Models {
         /// A sortable version number: ### ### ### ###
         /// e.g., 000 001 001 012 for 1.1.12
         /// </summary>
-        public virtual long NormalizedVersion { get; set; }
+        public virtual int VersionMajor { get; set; }
+        public virtual int VersionMinor { get; set; }
+        public virtual int VersionPatch { get; set; }
+        public virtual int VersionBuild { get; set; }
         public virtual string PackageVersionId { get; set; }
     }
 }
