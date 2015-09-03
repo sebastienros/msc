@@ -39,7 +39,9 @@ namespace Msc.CustomFeedBuilder
             if (context.ValueProvider.GetValue("blogaggregation") != null) {
 
                 var baseUrl = new Uri(new Uri(_orchardServices.WorkContext.CurrentSite.BaseUrl), "rssnamespace");
-                XNamespace ns = baseUrl.ToString();
+                var uriBuilder = new UriBuilder(baseUrl.ToString());
+                uriBuilder.Scheme = "http";
+                XNamespace ns = uriBuilder.ToString();
 
                 string description;
 
