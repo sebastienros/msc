@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<Orchard>
+    <Recipe>
+        <Name>blogs.iis.net</Name>
+        <Description>A recipe providing the features you need for a personal blog site.</Description>
+        <Author>The Orchard Team</Author>
+        <WebSite>http://orchardproject.net</WebSite>
+        <Tags>blog</Tags>
+        <Version>1.0</Version>
+        <IsSetupRecipe>true</IsSetupRecipe>
+    </Recipe>
+    <Feature enable="Orchard.Blogs,Orchard.Tags,Orchard.Tags.Feeds,Orchard.Tags.Feeds,Orchard.Alias,Orchard.Autoroute,
+                   XmlRpc,Orchard.Blogs.RemotePublishing,Orchard.ContentPicker,
+                   TinyMce,Orchard.MediaLibrary,Orchard.PublishLater, Orchard.Comments,
+                   Orchard.jQuery,Orchard.Widgets, Orchard.AntiSpam,
+                   Orchard.Scripting,Orchard.Scripting.Lightweight,
+                   TheBootstrapMachine, Orchard.ImageEditor, Markdown, Orchard.Azure.Media,
+                   Msc.CustomFeedBuilder.BlogFeedBuilder, WebAdvanced.Sitemap, Orchard.Email, 
+                   NGM.OpenAuthentication, Orchard.Redis.OutputCache" />
+    <Metadata>
+        <Types>
+            <Blog DisplayName="Blog">
+                <BlogPart />
+                <CommonPart />
+                <TitlePart />
+                <AutoroutePart AutorouteSettings.AllowCustomPattern="true" AutorouteSettings.AutomaticAdjustmentOnEdit="false" AutorouteSettings.PatternDefinitions="[{Name:'Title', Pattern: '{Content.Slug}', Description: 'my-blog'}]" AutorouteSettings.DefaultPatternIndex="0" />
+                <MenuPart />
+                <AdminMenuPart AdminMenuPartTypeSettings.DefaultPosition="2" />
+                <CommentsContainerPart />
+            </Blog>
+            <Page ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
+                <AutoroutePart />
+            </Page>
+            <BlogPost ContentTypeSettings.Draftable="True" TypeIndexing.Indexes="Search">
+                <TagsPart />
+                <TitlePart/>
+                <AutoroutePart />
+                <CommentsPart />
+            </BlogPost>
+            <Comment>
+                <JavaScriptAntiSpamPart />
+                <ReCaptchaPart />
+            </Comment>
+        </Types>
+        <Parts>
+            <BodyPart BodyPartSettings.FlavorDefault="html" />
+        </Parts>
+    </Metadata>
+    <Settings>
+        <SiteSettingsPart MaxPageSize="100" PageSize="10" PageTitleSeparator = " - " BaseUrl="http://blogs.iis.net"/>
+        <!-- http://weblogsproxy.cloudapp.net -->
+        <ReCaptchaSettingsPart PublicKey="6LefRgITAAAAAOSyjATUNPhlt3Ddd2_UTiYQtTZs" PrivateKey="6LefRgITAAAAAHBbxGsQD4cY_Sar-kIVgD435OD_" TrustAuthenticatedUsers="true" />
+        <ThemeSiteSettingsPart CurrentThemeName="TheBootstrapMachine" />
+        <RegistrationSettingsPart EnableLostPassword="True" />
+        <CacheSettingsPart DefaultCacheDuration="300" DefaultMaxAge="60" IgnoreNoCache="True" />
+    </Settings>
+    <Sitemap>
+        <Indexing>
+            <Index Name="Page" DisplayName="Page" IndexForDisplay="false" IndexForXml="true" Priority="3" UpdateFrequency="weekly"/>
+            <Index Name="Blog" DisplayName="Blog" IndexForDisplay="false" IndexForXml="true" Priority="3" UpdateFrequency="weekly"/>
+            <Index Name="BlogPost" DisplayName="Blog Post" IndexForDisplay="false" IndexForXml="true" Priority="3" UpdateFrequency="daily"/>
+        </Indexing>
+        <CustomRoutes/>
+        <DisplayRoutes/>
+    </Sitemap>
+    <Command>
+    layer create Default /LayerRule:"true" /Description:"The widgets in this layer are displayed on all pages"
+    layer create Authenticated /LayerRule:"authenticated" /Description:"The widgets in this layer are displayed when the user is authenticated"
+    layer create Anonymous /LayerRule:"not authenticated" /Description:"The widgets in this layer are displayed when the user is anonymous"
+    layer create Disabled /LayerRule:"false" /Description:"The widgets in this layer are never displayed"
+    layer create TheHomepage /LayerRule:"url '~/'" /Description:"The widgets in this layer are displayed on the home page"
+    theme activate "The Bootstrap Machine"
+    blog create /Title:"Blog" /Homepage:true /Description:"This is your Blog."
+    menu create /MenuName:"Main Menu"
+    menuitem create /MenuPosition:"0" /MenuText:"Home" /Url:"~/" /MenuName:"Main Menu"
+    widget create MenuWidget /Title:"Main Menu" /RenderTitle:false /Zone:"Navigation" /Position:"1" /Layer:"Default" /Identity:"MenuWidget1" /MenuName:"Main Menu"
+    role add permission Editor ManageMenus
+    role add permission Editor ManageComments
+    role add permission Editor ApplyTheme
+  </Command>
+    <Data BatchSize="50"/>
+</Orchard>
