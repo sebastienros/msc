@@ -68,7 +68,7 @@ namespace Orchard.Gallery.Controllers {
             });
         }
 
-        public ActionResult Index(PagerParameters pagerParameters, string type = "Module", string q = "") {
+        public ActionResult Index(PagerParameters pagerParameters, string type = "Module", string q = "", string s = "") {
 
             var pager = new Pager(_orchardService.WorkContext.CurrentSite, pagerParameters);
 
@@ -83,7 +83,19 @@ namespace Orchard.Gallery.Controllers {
             }
 
             searchBuilder.WithField("package-extension-type", type.ToLowerInvariant()).NotAnalyzed().ExactMatch();
-            searchBuilder.SortByInteger("package-download-count");
+
+            // Only apply custom order if there is no search filter. Otherwise some oddly related packages
+            // might appear at the top.
+            if (String.IsNullOrWhiteSpace(q) && !String.IsNullOrWhiteSpace(s)) {
+                switch (s) {
+                    case "download":
+                        searchBuilder.SortByInteger("package-download-count");
+                        break;
+                    default:
+                        // Order by relevance by default.
+                        break;
+                }
+            }
 
             var count = searchBuilder.Count();
             var pageOfResults = searchBuilder.Slice((pager.Page - 1) * pager.PageSize + 1, pager.PageSize).Search();

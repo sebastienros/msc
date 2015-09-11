@@ -89,6 +89,9 @@
     <Content Include="Views\Pager.cshtml" />
     <Content Include="Views\Pager.Next.cshtml" />
     <Content Include="Views\Pager.Previous.cshtml" />
+    <Content Include="Views\SearchForm.cshtml" />
+    <Content Include="Views\Orchard.Gallery\Package\Index.cshtml" />
+    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Web.config">

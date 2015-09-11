@@ -28,6 +28,8 @@
                 @* see MenuItem shape template *@
                 @DisplayChildren(Model)
                 @tag.EndElement
+                
+                @using (Capture(Layout.NavBar, "5")) {
                 <ul class="nav navbar-nav navbar-right">
                     @if (WorkContext.CurrentUser != null) {
                         <li class="dropdown">
@@ -38,19 +40,25 @@
                                     <li class="divider"></li>
                                 }
                                 <li>
-                                    @Html.ActionLink(T("Change Password").Text, "ChangePassword", new {Controller = "Account", Area = "Orchard.Users"})
+                                    @Html.ActionLink(T("Change Password").Text, "ChangePassword", new { Controller = "Account", Area = "Orchard.Users" })
                                 </li>
                                 
                                 <li>
-                                    @Html.ActionLink(T("Sign Out").ToString(), "LogOff", new {Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl}, new {rel = "nofollow"})
+                                    @Html.ActionLink(T("Sign Out").ToString(), "LogOff", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = Context.Request.RawUrl }, new { rel = "nofollow" })
                                 </li>
                             </ul>
                         </li>
                     }
                     else {
-                        <li>@Html.ActionLink(T("Sign In").ToString(), "LogOn", new {Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl)}, new {rel = "nofollow"})</li>
+                        <li>@Html.ActionLink(T("Sign In").ToString(), "LogOn", new { Controller = "Account", Area = "Orchard.Users", ReturnUrl = (Request.QueryString["ReturnUrl"] ?? Request.RawUrl) }, new { rel = "nofollow" })</li>
                     }
                 </ul>
+                }
+
+                @if (Layout.NavBar != null) {
+                    @Display(Layout.NavBar)
+                }
+
             </div>
         </div>
     </div>
