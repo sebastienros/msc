@@ -2,6 +2,8 @@
 @using Orchard.Security;
 @{
     var packageId = Model.ContentItem.PackagePart.PackageId;
+    string packageLatestVersion = Model.ContentItem.PackagePart.LatestVersion;
+
     ContentItem contentItem = Model.ContentItem;
     var membership = WorkContext.Resolve<IMembershipService>();
 }
@@ -25,7 +27,7 @@
     <div class="media-body">
         <h3 class="media-heading">
             @Html.ItemDisplayLink(contentItem) 
-            <a href="#" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
+            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageLatestVersion, area = "Orchard.Gallery" })" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
         </h3>
         <h4>
             @Model.ContentItem.PackagePart.Summary  

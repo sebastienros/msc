@@ -6,6 +6,9 @@
 
     string licenseUrl = Model.ContentItem.PackagePart.LicenseUrl;
     string license = Model.ContentItem.PackagePart.License;
+    var packageId = Model.ContentItem.PackagePart.PackageId;
+    string packageLatestVersion = Model.ContentItem.PackagePart.LatestVersion;
+
     var owner = Model.ContentItem.CommonPart.Owner;
 }
 
@@ -13,7 +16,7 @@
     <div class="col-sm-8">
         <h1>
             @Html.ItemDisplayText(contentItem)
-            <a href="#" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
+            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageLatestVersion, area = "Orchard.Gallery" })" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
         </h1>
         <h2>
             @Model.ContentItem.PackagePart.Summary

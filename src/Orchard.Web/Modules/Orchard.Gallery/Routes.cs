@@ -71,8 +71,21 @@ namespace Orchard.Gallery {
                         },
                         new MvcRouteHandler()
                     )
+                },
+                new RouteDescriptor {
+                    Route = new Route(
+                        "Download/{id}/{version}", new RouteValueDictionary {
+                            {"area", "Orchard.Gallery"},
+                            {"controller", "PackageVersion"},
+                            {"action", "Download"},
+                        },
+                        new RouteValueDictionary(),
+                        new RouteValueDictionary {
+                            {"area", "Orchard.Gallery"}
+                        },
+                        new MvcRouteHandler()
+                    )
                 }
-
             };
         }
     }

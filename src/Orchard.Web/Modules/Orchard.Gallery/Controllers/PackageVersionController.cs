@@ -50,6 +50,36 @@ namespace Orchard.Gallery.Controllers {
             });
         }
 
+        public ActionResult Download(string id, string version) {
+
+            if (String.IsNullOrWhiteSpace(id) || String.IsNullOrWhiteSpace(version)) {
+                return HttpNotFound();
+            }
+
+            var packageVersionId = id.ToLowerInvariant() + "/" + version;
+
+            var packageVersion = _orchardService.ContentManager.Query<PackageVersionPart, PackageVersionPartRecord>()
+                            .Where(p => p.PackageVersionId == packageVersionId)
+                            .List()
+                            .FirstOrDefault();
+
+            if (packageVersion == null) {
+                return HttpNotFound();
+            }
+
+            var package = packageVersion.CommonPart.Container.As<PackagePart>();
+            if (package == null) {
+                return HttpNotFound();
+            }
+
+            packageVersion.DownloadCount++;
+            package.DownloadCount++;
+
+            _orchardService.ContentManager.Publish(package.ContentItem);
+
+            return Redirect(packageVersion.PackageUrl);
+        }
+
         ISearchBuilder GetSearchBuilder() {
             return _indexManager
                 .GetSearchIndexProvider()
