@@ -28,23 +28,6 @@ namespace Orchard.Gallery.Controllers {
 
         public Localizer T { get; set; }
 
-        [HttpPost]
-        public ActionResult Create(string title, string tags, string description, string copyright, string projectUrl, string licenseUrl) {
-
-            return View();
-        }
-
-        public ActionResult Edit(int id) {
-
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Edit(int id, string title, string tags, string description, string copyright, string projectUrl, string licenseUrl) {
-
-            return View();
-        }
-
         public ActionResult Display(string id) {
             if(String.IsNullOrWhiteSpace(id)) {
                 return HttpNotFound();

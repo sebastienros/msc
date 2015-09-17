@@ -31,8 +31,8 @@ namespace Orchard.Gallery.Drivers {
                         .Where<CommonPartRecord>(x => x.Container.Id == part.Id)
                         .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMajor)
                         .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMinor)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionPatch)
                         .OrderByDescending<PackageVersionPartRecord>(x => x.VersionBuild)
+                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionRevision)
                         .List()
                         .ToList();
 
@@ -47,7 +47,12 @@ namespace Orchard.Gallery.Drivers {
 
         protected override DriverResult Editor(PackagePart part, IUpdateModel updater, dynamic shapeHelper) {
 
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var included = _orchardServices.Authorizer.Authorize(Permissions.ManageGallery)
+                ? new string[] { "PackageId", "Summary", "ExtensionType", "License", "LicenseUrl", "ProjectUrl", "DownloadCount" }
+                : new string[] { "PackageId", "Summary", "ExtensionType", "License", "LicenseUrl", "ProjectUrl" }
+                ;
+
+            updater.TryUpdateModel(part, Prefix, included, null);
 
             // Ensure the package id is unique and valid.
 

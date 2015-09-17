@@ -31,7 +31,9 @@
     @Html.TextBoxFor(m => m.LicenseUrl, new { @class = "text large" })
 </fieldset>
 
+@if (AuthorizedFor(Orchard.Gallery.Permissions.ManageGallery)) {
 <fieldset>
     @Html.LabelFor(m => m.DownloadCount, T("Download Count"))
     @Html.TextBoxFor(m => m.DownloadCount, new { @class = "text small" })
 </fieldset>
+}

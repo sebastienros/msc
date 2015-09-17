@@ -9,7 +9,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml.Linq;
-using Orchard.Environment;
 using Orchard.Gallery.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
@@ -25,7 +24,6 @@ namespace Orchard.Gallery.Services {
         public PackagePartFormatter(IWorkContextAccessor workContextAccessor) {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/atom+xml"));
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml"));
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             SupportedEncodings.Add(System.Text.Encoding.UTF8);
 

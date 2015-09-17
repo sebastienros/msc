@@ -8,8 +8,8 @@ namespace Orchard.Gallery.Models {
         /// </summary>
         public virtual int VersionMajor { get; set; }
         public virtual int VersionMinor { get; set; }
-        public virtual int VersionPatch { get; set; }
         public virtual int VersionBuild { get; set; }
+        public virtual int VersionRevision { get; set; }
         public virtual string PackageVersionId { get; set; }
     }
 }

@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Orchard.ContentManagement;
 using Orchard.ContentManagement.Drivers;
 using Orchard.ContentManagement.Handlers;
+using Orchard.Core.Common.Models;
 using Orchard.Gallery.Models;
+using Orchard.Gallery.ViewModels;
+using Orchard.Localization;
+using Orchard.UI.Notify;
 
 namespace Orchard.Gallery.Drivers {
     public class PackageVersionPartDriver : ContentPartDriver<PackageVersionPart> {
@@ -10,7 +16,11 @@ namespace Orchard.Gallery.Drivers {
 
         public PackageVersionPartDriver(IOrchardServices orchardServices) {
             _orchardServices = orchardServices;
+
+            T = NullLocalizer.Instance;
         }
+
+        public Localizer T { get; set; }
 
         protected override DriverResult Display(PackageVersionPart part, string displayType, dynamic shapeHelper) {
             return Combined(
@@ -21,11 +31,49 @@ namespace Orchard.Gallery.Drivers {
         }
 
         protected override DriverResult Editor(PackageVersionPart part, dynamic shapeHelper) {
-            return ContentShape("Parts_PackageVersion_Fields_Edit", () => shapeHelper.EditorTemplate(TemplateName: "Parts/PackageVersion.Fields", Model: part, Prefix: Prefix));
+            return ContentShape("Parts_PackageVersion_Fields_Edit", () => {
+                
+                var model = new EditPackageVersionViewModel {
+                    PackageParts = GetPackagePartsForUser(),
+                    PackageVersionPart = part,
+                    PackageId = part.CommonPart.Container != null ? part.CommonPart.Container.Id : -1
+                };
+
+                if(!model.PackageParts.Any()) {
+                    _orchardServices.Notifier.Error(T("You need to create a Package first."));
+                }
+
+                return shapeHelper.EditorTemplate(TemplateName: "Parts/PackageVersion.Fields", Model: model, Prefix: Prefix);
+            });
         }
 
         protected override DriverResult Editor(PackageVersionPart part, IUpdateModel updater, dynamic shapeHelper) {
-            updater.TryUpdateModel(part, Prefix, null, null);
+            var model = new EditPackageVersionViewModel {
+            };
+
+            updater.TryUpdateModel(model, Prefix, new string[] { "PackageId" }, null);
+
+            // Ensure the use owns the package for this package version
+            var packagesForUser = GetPackagePartsForUser();
+            if(!packagesForUser.Any(x => x.Id == model.PackageId)) {
+                updater.AddModelError("", T("You are not allowed to add a version to this package."));
+            }
+
+            model.PackageVersionPart = part;
+            model.PackageVersionPart.CommonPart.Container = _orchardServices.ContentManager.Get(model.PackageId);
+
+            var exclude = _orchardServices.Authorizer.Authorize(Permissions.ManageGallery)
+                ? null
+                : new string[] { "PackageVersionPart.DownloadCount" }
+                ;
+
+            updater.TryUpdateModel(model, Prefix, null, exclude);
+
+            Version version;
+            if (!Version.TryParse(model.PackageVersionPart.Version, out version)) {
+                updater.AddModelError("PackageVersionPart.Version", T("Invalid version."));
+            }
+
             return Editor(part, shapeHelper);
         }
 
@@ -54,6 +102,24 @@ namespace Orchard.Gallery.Drivers {
             context.ImportAttribute(part.PartDefinition.Name, "Version", value => {
                 part.Version = value;
             });
+        }
+
+        private IEnumerable<PackagePart> GetPackagePartsForUser() {
+            if (_orchardServices.Authorizer.Authorize(Permissions.ManageGallery)) {
+                return _orchardServices
+                    .ContentManager
+                    .Query<PackagePart, PackagePartRecord>(VersionOptions.Latest)
+                    .List()
+                    .OrderBy(x => x.TitlePart.Title);
+            }
+            else {
+                return _orchardServices
+                    .ContentManager
+                    .Query<PackagePart, PackagePartRecord>(VersionOptions.Latest)
+                    .Where<CommonPartRecord>(x => x.OwnerId == _orchardServices.WorkContext.CurrentUser.Id)
+                    .List()
+                    .OrderBy(x => x.TitlePart.Title);
+            }
         }
     }
 }

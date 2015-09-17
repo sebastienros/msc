@@ -109,12 +109,12 @@
     <Compile Include="Handlers\PackageVersionPartHandler.cs" />
     <Compile Include="Handlers\PackagePartHandler.cs" />
     <Compile Include="Migrations.cs" />
-    <Compile Include="Models\PackageVersion.cs" />
     <Compile Include="Models\PackageVersionPartRecord.cs" />
     <Compile Include="Models\PackagePartRecord.cs" />
     <Compile Include="Models\PackageVersionPart.cs" />
     <Compile Include="Models\PackagePart.cs" />
     <Compile Include="Controllers\PackageController.cs" />
+    <Compile Include="Permissions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApiRoutes.cs" />
     <Compile Include="Routes.cs" />
@@ -124,6 +124,7 @@
     <Compile Include="Services\PackageIdentityResolver.cs" />
     <Compile Include="Utils\TransferResult.cs" />
     <Compile Include="Utils\TransferToRouteResult.cs" />
+    <Compile Include="ViewModels\EditPackageVersionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Module.txt" />

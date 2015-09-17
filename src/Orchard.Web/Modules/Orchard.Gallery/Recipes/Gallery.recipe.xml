@@ -1,4 +1,13 @@
 ﻿<?xml version="1.0"?>
+<!-- 
+TODO: 
+- Make Package/PackageVersion securable
+- Remove Edit Content permission and add Edit/Publish/Delete Own Package permission to be able to create packages, and Edit/Publish/Delete Own Package permission 
+- Make Package draftable ?
+- Hide containable editor for PackageVersion
+- Enable audit trail
+- Import users as contributors
+-->
 <Orchard>
   <Recipe>
     <Name>Package Gallery</Name>
