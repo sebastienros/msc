@@ -6452,7 +6452,9 @@ button.close {
 #footer-quad:before,
 #footer-quad:after,
 #footer-sig:before,
-#footer-sig:after {
+#footer-sig:after,
+.package-summary:before,
+.package-summary:after {
   content: " ";
   display: table;
 }
@@ -6480,7 +6482,8 @@ button.close {
 #layout-main:after,
 #layout-tripel:after,
 #footer-quad:after,
-#footer-sig:after {
+#footer-sig:after,
+.package-summary:after {
   clear: both;
 }
 .center-block {
@@ -7308,4 +7311,13 @@ ul.content-items li {
   height: 20px;
   width: 20px;
   border-radius: 2px;
+}
+.package-summary {
+  font-size: 24px;
+  color: #777777;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.package-version {
+  font-size: 30px;
 }

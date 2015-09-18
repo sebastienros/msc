@@ -11,6 +11,11 @@ namespace Orchard.Gallery.Models {
         public BodyPart BodyPart {
             get { return this.As<BodyPart>(); }
         }
+
+        public PackagePart PackagePart {
+            get { return CommonPart.Container.As<PackagePart>(); }
+            set { CommonPart.Container = value; }
+        }
         
         public string Version {
             get { return this.Retrieve(x => x.Version); }

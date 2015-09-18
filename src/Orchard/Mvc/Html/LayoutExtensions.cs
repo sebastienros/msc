@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.WebPages;
@@ -48,7 +49,7 @@ namespace Orchard.Mvc.Html {
             return MvcHtmlString.Create(html.Encode(titleParts[0]));
         }
 
-        public static MvcHtmlString TitleForPage(this HtmlHelper html, params LocalizedString[] titleParts) {
+        public static MvcHtmlString TitleForPage(this HtmlHelper html, params IHtmlString[] titleParts) {
             if (titleParts == null || titleParts.Length < 1)
                 return null;
 

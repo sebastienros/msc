@@ -84,6 +84,7 @@
     <Content Include="ThemeZonePreview.png" />
     <Content Include="Assets.json" />
     <Content Include="Views\Content-Package.Detail.cshtml" />
+    <Content Include="Views\Content-PackageVersion.Detail.cshtml" />
     <None Include="Views\Content-Package.Summary.cshtml" />
     <Content Include="Views\Parts.Package.PackageVersions.cshtml" />
     <Content Include="Views\Pager.cshtml" />
@@ -120,6 +121,10 @@
     <ProjectReference Include="..\..\Core\Orchard.Core.csproj">
       <Project>{9916839c-39fc-4ceb-a5af-89ca7e87119f}</Project>
       <Name>Orchard.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Modules\Orchard.Gallery\Orchard.Gallery.csproj">
+      <Project>{b69d91b7-71e2-4e95-88ea-a1754126a56e}</Project>
+      <Name>Orchard.Gallery</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
