@@ -230,6 +230,10 @@ namespace Orchard.MediaLibrary.Controllers {
                     return new HttpUnauthorizedResult();
                 }
 
+                if(!_mediaLibraryService.CanManageMediaFolder(media.FolderPath)) {
+                    return new HttpUnauthorizedResult();
+                }
+
                 var newFileName = Path.GetFileNameWithoutExtension(media.FileName) + " Copy" + Path.GetExtension(media.FileName);
                 
                 _mediaLibraryService.CopyFile(media.FolderPath, media.FileName, media.FolderPath, newFileName);
