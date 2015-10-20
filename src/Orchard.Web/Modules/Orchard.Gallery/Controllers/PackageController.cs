@@ -81,7 +81,7 @@ namespace Orchard.Gallery.Controllers {
             }
 
             var count = searchBuilder.Count();
-            var pageOfResults = searchBuilder.Slice((pager.Page - 1) * pager.PageSize + 1, pager.PageSize).Search();
+            var pageOfResults = searchBuilder.Slice((pager.Page - 1) * pager.PageSize, pager.PageSize).Search();
 
             var list = _orchardService.New.List();
             var foundIds = pageOfResults.Select(searchHit => searchHit.ContentItemId).ToList();

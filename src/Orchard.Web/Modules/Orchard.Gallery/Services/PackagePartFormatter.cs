@@ -143,7 +143,7 @@ namespace Orchard.Gallery.Services {
                     new XElement(dns + "ExternalPackageUrl", "", new XAttribute(mns + "null", "true")),
                     new XElement(dns + "ProjectUrl", package.ProjectUrl),
                     new XElement(dns + "LicenseUrl", package.LicenseUrl, new XAttribute(mns + "null", "true")),
-                    new XElement(dns + "IconUrl", package.IconUrl),
+                    new XElement(dns + "IconUrl", ((dynamic)package)?.Icon?.FirstMediaUrl),
                     new XElement(dns + "Rating", "5", new XAttribute(mns + "type", "Edm.Double")),
                     new XElement(dns + "RatingsCount", "0", new XAttribute(mns + "type", "Edm.Int32")),
                     new XElement(dns + "DownloadCount", package.DownloadCount, new XAttribute(mns + "type", "Edm.Int32")),

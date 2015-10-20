@@ -40,39 +40,6 @@ namespace Orchard.Gallery.Models {
             set { this.Store(x => x.Summary, value); }
         }
 
-        public Uri IconUrl {
-            get {
-                var iconUrl = Retrieve<string>("IconUrl") ?? "";
-                if(String.IsNullOrWhiteSpace(iconUrl)) {
-                    return null;
-                }
-
-                return new Uri(iconUrl);
-            }
-            set {
-                Store("IconUrl", value == null ? "" : value.ToString());
-            }
-        }
-
-        public Uri[] ScreenshotUrls {
-            get {
-                var screenshotUrls = Retrieve<string>("ScreenshotUrls") ?? "";
-                if (String.IsNullOrWhiteSpace(screenshotUrls)) {
-                    return new Uri[0];
-                }
-
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                return serializer.Deserialize<string[]>(screenshotUrls)
-                    .Select(x => new Uri(x))
-                    .ToArray();
-            }
-            set {
-                var screenshotUrls = (value ?? new Uri[0]).Select(x => x.ToString()).ToArray();
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                Store("ScreenshotUrls", serializer.Serialize(screenshotUrls));
-            }
-        }
-
         public string LatestVersion {
             get { return this.Retrieve(x => x.LatestVersion); }
             set { this.Store(x => x.LatestVersion, value); }

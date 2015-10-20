@@ -14,11 +14,21 @@
     <div class="col-sm-8">
         <h1>
             @Html.TitleForPage(Html.ItemDisplayText(contentItem)) <span class="package-version">@packageLatestVersion</span>
+            @if (AuthorizedFor(Orchard.Core.Contents.Permissions.EditContent, contentItem)) {
+                <a href="@Url.ItemEditUrl(contentItem)" role="button" class="hidden-xs pull-right btn btn-secondary"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> @T("Edit")</a>
+            }
             <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageLatestVersion, area = "Orchard.Gallery" })" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
             <span class="package-summary">
                 @Model.ContentItem.PackagePart.Summary
             </span>
         </h1>
+
+        <div class="row">
+            @foreach (var media in ((dynamic)Model.ContentItem).Package.Screenshots.MediaParts) {
+                <img src="@media.MediaUrl" class="col-md-4"/>
+            }
+        </div>
+
 
         @Display(Model.Body)
     </div>

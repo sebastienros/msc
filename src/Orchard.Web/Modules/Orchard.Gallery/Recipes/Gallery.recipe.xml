@@ -62,6 +62,8 @@ TODO:
     <Parts>
       <Package>
         <Categories.TaxonomyField DisplayName="Categories" FieldIndexing.Included="True" TaxonomyFieldSettings.Taxonomy="Categories" TaxonomyFieldSettings.LeavesOnly="False" TaxonomyFieldSettings.Required="False" TaxonomyFieldSettings.SingleChoice="False" TaxonomyFieldSettings.Autocomplete="True" TaxonomyFieldSettings.AllowCustomTerms="False" TaxonomyFieldSettings.Hint="Please select the categories of the Module" />
+        <Screenshots.MediaLibraryPickerField DisplayName="Screenshots" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="True" MediaLibraryPickerFieldSettings.DisplayedContentTypes="Image" />
+        <Icon.MediaLibraryPickerField DisplayName="Icon" MediaLibraryPickerFieldSettings.Required="False" MediaLibraryPickerFieldSettings.Multiple="False" MediaLibraryPickerFieldSettings.DisplayedContentTypes="Image" />
       </Package>
 
       <PackagePart ContentPartSettings.Attachable="True" 

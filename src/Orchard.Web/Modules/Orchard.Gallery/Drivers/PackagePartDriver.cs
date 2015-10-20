@@ -81,12 +81,10 @@ namespace Orchard.Gallery.Drivers {
 
             partElement.SetAttributeValue("DownloadCount", part.DownloadCount);
             partElement.SetAttributeValue("ExtensionType", part.ExtensionType);
-            partElement.SetAttributeValue("IconUrl", part.Retrieve<string>("IconUrl"));
             partElement.SetAttributeValue("License", part.License);
             partElement.SetAttributeValue("LicenseUrl", part.LicenseUrl);
             partElement.SetAttributeValue("PackageId", part.PackageId);
             partElement.SetAttributeValue("ProjectUrl", part.ProjectUrl);
-            partElement.SetAttributeValue("ScreenshotUrls", part.Retrieve<string>("ScreenshotUrls"));
             partElement.SetAttributeValue("Summary", part.Summary);
         }
 
@@ -104,10 +102,6 @@ namespace Orchard.Gallery.Drivers {
                 part.ExtensionType = (PackagePart.ExtensionTypes)Enum.Parse(typeof(PackagePart.ExtensionTypes), value, true);
             });
 
-            context.ImportAttribute(part.PartDefinition.Name, "IconUrl", value => {
-                part.Store("IconUrl", value);
-            });
-
             context.ImportAttribute(part.PartDefinition.Name, "License", value => {
                 part.License = value;
             });
@@ -122,10 +116,6 @@ namespace Orchard.Gallery.Drivers {
 
             context.ImportAttribute(part.PartDefinition.Name, "ProjectUrl", value => {
                 part.ProjectUrl = value;
-            });
-
-            context.ImportAttribute(part.PartDefinition.Name, "ScreenshotUrls", value => {
-                part.Store("ScreenshotUrls", value);
             });
 
             context.ImportAttribute(part.PartDefinition.Name, "Summary", value => {
