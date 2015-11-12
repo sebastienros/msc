@@ -85,7 +85,7 @@
     <Content Include="Assets.json" />
     <Content Include="Views\Content-Package.Detail.cshtml" />
     <Content Include="Views\Content-PackageVersion.Detail.cshtml" />
-    <None Include="Views\Content-Package.Summary.cshtml" />
+    <Content Include="Views\Content-Package.Summary.cshtml" />
     <Content Include="Views\Parts.Package.PackageVersions.cshtml" />
     <Content Include="Views\Pager.cshtml" />
     <Content Include="Views\Pager.Next.cshtml" />

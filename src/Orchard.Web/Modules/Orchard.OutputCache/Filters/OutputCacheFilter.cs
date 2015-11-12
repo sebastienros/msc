@@ -24,7 +24,7 @@ using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.OutputCache.Filters {
-    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
+    public class OutputCacheFilter : IFilterProvider, IActionFilter, IResultFilter {
 
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;

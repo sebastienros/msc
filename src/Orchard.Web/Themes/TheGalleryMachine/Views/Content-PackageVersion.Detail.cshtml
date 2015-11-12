@@ -13,7 +13,7 @@
     <div class="col-sm-8">
         <h1>
             @Html.TitleForPage(Html.ItemDisplayText(packagePart)) <span class="package-version">@packageVersionPart.Version</span>
-            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageVersionPart.Version, area = "Orchard.Gallery" })" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
+            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageVersionPart.Version, area = "Orchard.Gallery" })" role="button" rel="nofollow" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
             <span class="package-summary">
                 @packagePart.Summary
             </span>

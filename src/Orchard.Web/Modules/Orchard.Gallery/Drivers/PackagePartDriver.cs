@@ -29,11 +29,11 @@ namespace Orchard.Gallery.Drivers {
                     var versions = _orchardServices.ContentManager
                         .Query<PackageVersionPart, PackageVersionPartRecord>()
                         .Where<CommonPartRecord>(x => x.Container.Id == part.Id)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMajor)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionMinor)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionBuild)
-                        .OrderByDescending<PackageVersionPartRecord>(x => x.VersionRevision)
                         .List()
+                        .OrderByDescending(x => x.Record.VersionMajor)
+                        .ThenByDescending(x => x.Record.VersionMinor)
+                        .ThenByDescending(x => x.Record.VersionBuild)
+                        .ThenByDescending(x => x.Record.VersionRevision)
                         .ToList();
 
                     return shapeHelper.Parts_Package_PackageVersions(Package: part, PackageVersions: versions);

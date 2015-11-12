@@ -1,5 +1,7 @@
 ﻿@using Orchard.ContentManagement;
 @{
+    Script.Require("jQuery");
+
     ContentItem contentItem = Model.ContentItem;
 
     string licenseUrl = Model.ContentItem.PackagePart.LicenseUrl;
@@ -17,21 +19,27 @@
             @if (AuthorizedFor(Orchard.Core.Contents.Permissions.EditContent, contentItem)) {
                 <a href="@Url.ItemEditUrl(contentItem)" role="button" class="hidden-xs pull-right btn btn-secondary"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> @T("Edit")</a>
             }
-            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageLatestVersion, area = "Orchard.Gallery" })" role="button" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
+            <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageLatestVersion, area = "Orchard.Gallery" })" role="button" rel="nofollow" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
             <span class="package-summary">
                 @Model.ContentItem.PackagePart.Summary
             </span>
         </h1>
 
         <div class="row">
-            @foreach (var media in ((dynamic)Model.ContentItem).Package.Screenshots.MediaParts) {
-                <img src="@media.MediaUrl" class="col-md-4"/>
+            @foreach (var media in ((IEnumerable<dynamic>)((dynamic)Model.ContentItem).Package.Screenshots.MediaParts).Take(1)) {
+                <img id="thumbnail" src="@Display.ResizeMediaUrl(Path: media.MediaUrl, Width: 1024, Heigth: 768)" class="col-sm-12" />
             }
         </div>
 
-
+        <div class="row top-buffer">
+            @foreach (var media in ((dynamic)Model.ContentItem).Package.Screenshots.MediaParts) {
+                <img height="150" class="snippet col-sm-3" src="@Display.ResizeMediaUrl(Path: media.MediaUrl, Width: 1024, Heigth: 768)" />
+            }
+        </div>
+            
         @Display(Model.Body)
-    </div>
+
+        </div>
 
     <div class="sidebar col-sm-4">
         <ul class="box">
@@ -81,3 +89,13 @@
     </div>
 </div>
 
+@using(Script.Foot()) {
+    <script language="javascript">
+        $(function () {
+            $(".snippet").click(function () {
+                var src = $(this).attr("src");
+                $("#thumbnail").attr("src", src);
+            })
+        });
+    </script>
+}
