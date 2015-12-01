@@ -17,8 +17,8 @@ namespace Orchard.Layouts.Controllers {
         private readonly ILayoutModelMapper _mapper;
 
         public LayoutController(
-            IContentManager contentManager, 
-            ILayoutManager layoutManager, 
+            IContentManager contentManager,
+            ILayoutManager layoutManager,
             ILayoutModelMapper mapper,
             IOrchardServices orchardServices) {
 
@@ -35,10 +35,6 @@ namespace Orchard.Layouts.Controllers {
 
         [HttpPost, ValidateInput(enableValidation: false)]
         public ActionResult ApplyTemplate(int? templateId = null, string layoutData = null, int? contentId = null, string contentType = null) {
-            if(!Services.Authorizer.Authorize(Permissions.ManageLayouts, T("Not authorized to manage layouts."))) {
-                return new HttpUnauthorizedResult();
-            }
-
             var template = templateId != null ? _layoutManager.GetLayout(templateId.Value) : null;
             var templateElements = template != null ? _layoutManager.LoadElements(template).ToList() : default(IEnumerable<Element>);
             var describeContext = CreateDescribeElementsContext(contentId, contentType);

@@ -24,7 +24,7 @@ using Orchard.UI.Admin;
 using Orchard.Utility.Extensions;
 
 namespace Orchard.OutputCache.Filters {
-    public class OutputCacheFilter : IFilterProvider, IActionFilter, IResultFilter {
+    public class OutputCacheFilter : FilterProvider, IActionFilter, IResultFilter {
 
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
@@ -358,7 +358,7 @@ namespace Orchard.OutputCache.Filters {
 
         protected virtual IDictionary<string, object> GetCacheKeyParameters(ActionExecutingContext filterContext) {
             var result = new Dictionary<string, object>();
-            
+
             // Vary by action parameters.
             foreach (var p in filterContext.ActionParameters)
                 result.Add("PARAM:" + p.Key, p.Value);
@@ -381,7 +381,7 @@ namespace Orchard.OutputCache.Filters {
                     result["HEADER:" + varyByRequestHeader] = requestHeaders[varyByRequestHeader];
             }
 
-            
+
             // Vary by request culture if configured.
             if (CacheSettings.VaryByCulture) {
                 result["culture"] = _workContext.CurrentCulture.ToLowerInvariant();
@@ -459,8 +459,10 @@ namespace Orchard.OutputCache.Filters {
             return true;
         }
 
-        private CacheSettings CacheSettings {
-            get {
+        private CacheSettings CacheSettings
+        {
+            get
+            {
                 return _cacheSettings ?? (_cacheSettings = _cacheManager.Get(CacheSettings.CacheKey, true, context => {
                     context.Monitor(_signals.When(CacheSettings.CacheKey));
                     return new CacheSettings(_workContext.CurrentSite.As<CacheSettingsPart>());
@@ -472,7 +474,7 @@ namespace Orchard.OutputCache.Filters {
             var response = filterContext.HttpContext.Response;
 
             // Fix for missing charset in response headers
-            response.Charset = response.Charset; 
+            response.Charset = response.Charset;
 
             // Adds some caching information to the output if requested.
             if (CacheSettings.DebugMode) {
@@ -597,7 +599,7 @@ namespace Orchard.OutputCache.Filters {
                 var cacheItem = _cacheStorageProvider.GetCacheItem(key);
                 return cacheItem;
             }
-            catch(Exception e) {
+            catch (Exception e) {
                 Logger.Error(e, "An unexpected error occured while reading a cache entry");
             }
 
