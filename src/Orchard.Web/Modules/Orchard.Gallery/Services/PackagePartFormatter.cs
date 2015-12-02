@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Xml.Linq;
+using Orchard.DisplayManagement;
 using Orchard.Gallery.Models;
 using Orchard.Mvc.Extensions;
 using Orchard.Mvc.Html;
@@ -53,6 +54,10 @@ namespace Orchard.Gallery.Services {
             var baseUrl = workContext.CurrentSite.BaseUrl;
             var urlHelper = workContext.Resolve<UrlHelper>();
 
+            var httpContext = workContext.HttpContext;
+            var shapeDisplay = workContext.Resolve<IShapeDisplay>();
+            var shapeFactory = workContext.Resolve<IShapeFactory>();
+            
             var document = new XDocument(
                 new XDeclaration("1.0", "utf-8", "yes")
             );
@@ -80,7 +85,7 @@ namespace Orchard.Gallery.Services {
             var packages = value as IEnumerable<PackagePart>;
             if (packages != null) {
                 foreach(var package in packages) {
-                    feed.Add(CreatePackage(package, urlHelper, baseUrl));
+                    feed.Add(CreatePackage(package, urlHelper, baseUrl, shapeDisplay, shapeFactory));
                 }
             }
             else {
@@ -88,7 +93,7 @@ namespace Orchard.Gallery.Services {
                 if (package == null) {
                     throw new InvalidOperationException("Cannot serialize type");
                 }
-                feed.Add(CreatePackage(package, urlHelper, baseUrl));
+                feed.Add(CreatePackage(package, urlHelper, baseUrl, shapeDisplay, shapeFactory));
             }
 
             var xml = document.ToString();
@@ -98,8 +103,56 @@ namespace Orchard.Gallery.Services {
             }
         }
 
-        private XElement CreatePackage(PackagePart package, UrlHelper urlHelper, string baseUrl) {
+        private XElement CreatePackage(PackagePart package, UrlHelper urlHelper, string baseUrl, IShapeDisplay shapeDisplay, dynamic shapeFactory) {
             var element = new XElement(atomns + "entry");
+
+            dynamic content = package.ContentItem;
+            string iconUrl = null;
+
+            if (content.Package.Icon != null && content.Package.Icon.FirstMediaUrl != null) {
+                iconUrl = (string)content.Package.Icon.FirstMediaUrl;
+                iconUrl = shapeDisplay.Display(shapeFactory.ResizeMediaUrl(Path: iconUrl, Width: 64, Heigth: 64));
+            }
+
+            var screenshots = new XElement(atomns + "link",
+                    new XAttribute("rel", "http://schemas.microsoft.com/ado/2007/08/dataservices/related/Screenshots"),
+                    new XAttribute("type", "application/atom+xml;type=feed"),
+                    new XAttribute("title", "Screenshots"),
+                    new XAttribute("href", "Packages(Id='" + package.PackageId + "')/Screenshots")
+                    );
+
+
+            foreach (var media in (IEnumerable<dynamic>)content.Package.Screenshots.MediaParts) {
+
+                string screenshotUrl = media.MediaUrl;
+                screenshotUrl = shapeDisplay.Display(shapeFactory.ResizeMediaUrl(Path: screenshotUrl, Width: 164, Heigth: 128));
+
+                screenshots.Add(
+                    new XElement(mns + "inline",
+                        new XElement(atomns + "feed",
+                            new XElement(atomns + "title", "Screenshots", new XAttribute("type", "text")),
+                            new XElement(atomns + "id", urlHelper.MakeAbsolute("/FeedService/Packages(Id='" + package.PackageId + "')/Screenshots", baseUrl)),
+                            new XElement(atomns + "link",
+                                new XAttribute("rel", "self"),
+                                new XAttribute("title", "Screenshots"),
+                                new XAttribute("href", "Packages(Id='" + package.PackageId + "')/Screenshots")
+                                ),
+                            new XElement(atomns + "entry",
+                                new XElement(atomns + "id", urlHelper.MakeAbsolute("/FeedService.svc/Screenshots(" + (string)media.Id.ToString() + ")", baseUrl)),
+                                new XElement(atomns + "title", media.ContentItem.TitlePart.Title, new XAttribute("type", "text")),
+                                new XElement(atomns + "content", new XAttribute("type", "application/xml"),
+                                    new XElement(mns + "properties",
+                                        new XElement(dns + "Id", media.ContentItem.Id, new XAttribute(mns + "type", "Edm.Int32")),
+                                        new XElement(dns + "PublishedPackageId", package.PackageId),
+                                        new XElement(dns + "ScreenshotUri", urlHelper.MakeAbsolute(screenshotUrl, baseUrl)),
+                                        new XElement(dns + "Caption", new XAttribute(mns + "null", "true"))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+            }
 
             element.Add(
                 new XElement(atomns + "id", urlHelper.MakeAbsolute(urlHelper.ItemDisplayUrl(package), baseUrl)),
@@ -109,6 +162,7 @@ namespace Orchard.Gallery.Services {
                 new XElement(atomns + "author",
                     new XElement(atomns + "name", package.CommonPart.Owner.UserName)
                     ),
+                screenshots,
                 // edit-media
                 // edit
                 //new XElement(atomns + "category",
@@ -143,7 +197,7 @@ namespace Orchard.Gallery.Services {
                     new XElement(dns + "ExternalPackageUrl", "", new XAttribute(mns + "null", "true")),
                     new XElement(dns + "ProjectUrl", package.ProjectUrl),
                     new XElement(dns + "LicenseUrl", package.LicenseUrl, new XAttribute(mns + "null", "true")),
-                    new XElement(dns + "IconUrl", ((dynamic)package)?.Icon?.FirstMediaUrl),
+                    new XElement(dns + "IconUrl", iconUrl),
                     new XElement(dns + "Rating", "5", new XAttribute(mns + "type", "Edm.Double")),
                     new XElement(dns + "RatingsCount", "0", new XAttribute(mns + "type", "Edm.Int32")),
                     new XElement(dns + "DownloadCount", package.DownloadCount, new XAttribute(mns + "type", "Edm.Int32")),

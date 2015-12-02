@@ -3,36 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Web;
 using System.Web.Http;
 using System.Xml.Linq;
 using Orchard.ContentManagement;
+using Orchard.DisplayManagement;
 using Orchard.Gallery.Models;
 using Orchard.Gallery.Services;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Mvc.Extensions;
 
 namespace Orchard.Gallery.Controllers {
     public class FeedServiceController : ApiController {
 
         private readonly IIndexManager _indexManager;
         private readonly IOrchardServices _orchardService;
+        private readonly dynamic _shapeFactory;
+        private readonly IShapeDisplay _shapeDisplay;
+        private readonly IWorkContextAccessor _workContextAccessor;
 
         public FeedServiceController(
             IOrchardServices orchardService,
-            IIndexManager indexManager
+            IIndexManager indexManager,
+            IShapeFactory shapeFactory,
+            IShapeDisplay shapeDisplay,
+            IWorkContextAccessor workContextAccessor
             ) {
             _orchardService = orchardService;
             _indexManager = indexManager;
+            _shapeFactory = shapeFactory;
+            _shapeDisplay = shapeDisplay;
+            _workContextAccessor = workContextAccessor;
 
             T = NullLocalizer.Instance;
         }
 
         public Localizer T { get; set; }
-
-        public PackagePart GetPackage(string id) {
-            return null;
-        }
-
+        
         public HttpResponseMessage GetManifest() {
             var manifest = new XDocument();
             XNamespace xmlns = "http://www.w3.org/2007/app";
@@ -140,9 +148,14 @@ namespace Orchard.Gallery.Controllers {
             // Only apply custom order if there is no search filter. Otherwise some oddly related packages
             // might appear at the top.
             if (String.IsNullOrWhiteSpace(q) && !String.IsNullOrWhiteSpace(orderby)) {
-                switch (orderby) {
+                switch (orderby.Split(',')[0].ToLowerInvariant()) {
+                    case "downloadcount desc":
                     case "download":
                         searchBuilder.SortByInteger("package-download-count");
+                        break;
+                    case "ratings":
+                    case "title":
+                        searchBuilder.SortByString("title").Ascending();
                         break;
                     default:
                         // Order by relevance by default.

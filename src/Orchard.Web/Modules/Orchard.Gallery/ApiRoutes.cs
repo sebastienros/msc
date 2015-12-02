@@ -33,17 +33,6 @@ public class ApiRoutes : IHttpRouteProvider {
                 },
             },
             new HttpRouteDescriptor {
-                Name = "FeedServicePackage",
-                Priority = -10,
-                RouteTemplate = "api/FeedService/Packages({id})",
-                Defaults = new {
-                    area = "Orchard.Gallery",
-                    controller = "FeedService",
-                    action = "GetPackage"
-                },
-            }
-            ,
-            new HttpRouteDescriptor {
                 Name = "FeedServiceManifest",
                 Priority = -10,
                 RouteTemplate = "api/FeedService",
