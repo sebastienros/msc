@@ -7,6 +7,8 @@ using Orchard.ContentManagement.Handlers;
 using Orchard.MediaLibrary.ViewModels;
 using Orchard.Localization;
 using Orchard.Utility.Extensions;
+using System.Collections.Generic;
+using Orchard.Logging;
 
 namespace Orchard.MediaLibrary.Drivers {
     public class MediaLibraryPickerFieldDriver : ContentFieldDriver<Fields.MediaLibraryPickerField> {
@@ -73,10 +75,16 @@ namespace Orchard.MediaLibrary.Drivers {
 
         protected override void Importing(ContentPart part, Fields.MediaLibraryPickerField field, ImportContentContext context) {
             var contentItemIds = context.Attribute(field.FieldDefinition.Name + "." + field.Name, "ContentItems");
-            if (contentItemIds != null) {
-                field.Ids = contentItemIds.Split(',')
-                    .Select(context.GetItemFromSession)
-                    .Select(contentItem => contentItem.Id).ToArray();
+            if (!String.IsNullOrEmpty(contentItemIds)) {
+                var contentItems = new List<ContentItem>();
+                foreach(var contentItemId in contentItemIds.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+                    var contentItem = context.GetItemFromSession(contentItemId);
+                    if(contentItem != null) {
+                        contentItems.Add(contentItem);
+                    }
+                }
+
+                field.Ids = contentItems.Select(x => x.Id).ToArray();
             }
             else {
                 field.Ids = new int[0];
