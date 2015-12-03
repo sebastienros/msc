@@ -122,8 +122,6 @@
     <Compile Include="Services\PackagePartFormatterEvents.cs" />
     <Compile Include="Services\PackageVersionIdResolverSelector.cs" />
     <Compile Include="Services\PackageIdentityResolver.cs" />
-    <Compile Include="Utils\TransferResult.cs" />
-    <Compile Include="Utils\TransferToRouteResult.cs" />
     <Compile Include="ViewModels\EditPackageVersionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

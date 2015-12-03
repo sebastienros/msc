@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.ContentManagement;
 using Orchard.Gallery.Models;
-using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
+using Orchard.Mvc;
 using Orchard.Themes;
 using Orchard.UI.Navigation;
 
@@ -29,7 +28,7 @@ namespace Orchard.Gallery.Controllers {
         public Localizer T { get; set; }
 
         public ActionResult Display(string id) {
-            if(String.IsNullOrWhiteSpace(id)) {
+            if (String.IsNullOrWhiteSpace(id)) {
                 return HttpNotFound();
             }
 
@@ -43,12 +42,14 @@ namespace Orchard.Gallery.Controllers {
                 return HttpNotFound();
             }
 
-            return new TransferToRouteResult(new RouteValueDictionary {
-                { "action", "Display" },
-                { "controller", "Item" },
-                { "area", "Containers" },
-                { "id", package.Id }
-            });
+            // Render the Package as a container
+            if (!_orchardService.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, package, T("Cannot view package"))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            var model = _orchardService.ContentManager.BuildDisplay(package);
+
+            return new ShapeResult(this, model);
         }
 
         public ActionResult Index(PagerParameters pagerParameters, string type = "Module", string q = "", string s = "") {
@@ -57,10 +58,10 @@ namespace Orchard.Gallery.Controllers {
 
             var searchBuilder = GetSearchBuilder();
 
-            if(!String.IsNullOrWhiteSpace(q)) {
+            if (!String.IsNullOrWhiteSpace(q)) {
                 searchBuilder.Parse(
-                    defaultFields: new[] { "body", "title", "tags", "package-id" }, 
-                    query: q, 
+                    defaultFields: new[] { "body", "title", "tags", "package-id" },
+                    query: q,
                     escape: true
                 );
             }

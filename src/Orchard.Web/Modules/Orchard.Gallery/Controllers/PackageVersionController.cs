@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.Routing;
 using Orchard.Gallery.Models;
-using Orchard.Gallery.Utils;
 using Orchard.Indexing;
 using Orchard.Localization;
 using Orchard.ContentManagement;
+using Orchard.Mvc;
+using Orchard.Themes;
 
 namespace Orchard.Gallery.Controllers {
     public class PackageVersionController : Controller {
@@ -25,6 +25,7 @@ namespace Orchard.Gallery.Controllers {
 
         public Localizer T { get; set; }
 
+        [Themed]
         public ActionResult Display(string id, string version) {
 
             if (String.IsNullOrWhiteSpace(id) || String.IsNullOrWhiteSpace(version)) {
@@ -33,7 +34,8 @@ namespace Orchard.Gallery.Controllers {
 
             var packageVersionId = id.ToLowerInvariant() + "/" + version;
 
-            var packageVersion = _orchardService.ContentManager.Query<PackageVersionPart, PackageVersionPartRecord>()
+            var packageVersion = _orchardService.ContentManager
+                .Query<PackageVersionPart, PackageVersionPartRecord>()
                             .Where(p => p.PackageVersionId == packageVersionId)
                             .List()
                             .FirstOrDefault();
@@ -42,12 +44,12 @@ namespace Orchard.Gallery.Controllers {
                 return HttpNotFound();
             }
 
-            return new TransferToRouteResult(new RouteValueDictionary {
-                { "action", "Display" },
-                { "controller", "Item" },
-                { "area", "Contents" },
-                { "id", packageVersion.Id }
-            });
+            if (!_orchardService.Authorizer.Authorize(Core.Contents.Permissions.ViewContent, packageVersion, T("Cannot view package"))) {
+                return new HttpUnauthorizedResult();
+            }
+
+            var model = _orchardService.ContentManager.BuildDisplay(packageVersion);
+            return new ShapeResult(this, model);
         }
 
         public ActionResult Download(string id, string version) {
