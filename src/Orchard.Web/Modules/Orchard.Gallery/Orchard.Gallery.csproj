@@ -122,6 +122,7 @@
     <Compile Include="Services\PackagePartFormatterEvents.cs" />
     <Compile Include="Services\PackageVersionIdResolverSelector.cs" />
     <Compile Include="Services\PackageIdentityResolver.cs" />
+    <Compile Include="Utils\Version.cs" />
     <Compile Include="ViewModels\EditPackageVersionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

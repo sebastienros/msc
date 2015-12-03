@@ -2,11 +2,8 @@
 <!-- 
 TODO: 
 - Make Package/PackageVersion securable
-- Remove Edit Content permission and add Edit/Publish/Delete Own Package permission to be able to create packages, and Edit/Publish/Delete Own Package permission 
 - Make Package draftable ?
-- Hide containable editor for PackageVersion
 - Enable audit trail
-- Import users as contributors
 -->
 <Orchard>
   <Recipe>
@@ -23,8 +20,7 @@ TODO:
   
   <Metadata>
     <Types>
-      <Package TypeIndexing.Indexes="Packages" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
-
+      <Package TypeIndexing.Indexes="Packages" ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Securable="True" DisplayName="Package">
         <Package />
         <PackagePart />
         <CommonPart OwnerEditorSettings.ShowOwnerEditor="true" DateEditorSettings.ShowDateEditor="false" />
@@ -37,12 +33,12 @@ TODO:
         
       </Package>
 
-      <PackageVersion TypeIndexing.Indexes="PackageVersions" ContentTypeSettings.Creatable="true" ContentTypeSettings.Listable="true">
+      <PackageVersion TypeIndexing.Indexes="PackageVersions" ContentTypeSettings.Creatable="True" ContentTypeSettings.Listable="True" ContentTypeSettings.Draftable="False" ContentTypeSettings.Securable="True" DisplayName="Package Version">
         <PackageVersionPart />
         <CommonPart />
         <!-- Changelog -->
         <BodyPart BodyTypePartSettings.Flavor="Markdown" />
-        <ContainablePart ContainableTypePartSettings.ShowContainerPicker="True" ContainableTypePartSettings.ShowPositionEditor="false" />
+        <ContainablePart ContainableTypePartSettings.ShowContainerPicker="False" ContainableTypePartSettings.ShowPositionEditor="False" />
       </PackageVersion>
 
       <CategoriesTerm Taxonomy="Categories" DisplayName="Categories Term">
@@ -98,4 +94,9 @@ TODO:
     </Taxonomy>
 
   </Data>
+
+  <Roles>
+    <Role Name="Contributor" Permissions="AccessAdminPanel,PublishOwn_Package,EditOwn_Package,DeleteOwn_Package,PublishOwn_PackageVersion,EditOwn_PackageVersion,DeleteOwn_PackageVersion,PreviewOwnContent,ManageOwnMedia,EditOwnBlogPost,AddComment" />
+  </Roles>
+
 </Orchard>

@@ -32,9 +32,7 @@ namespace Orchard.Gallery.Drivers {
                         .List()
                         .OrderByDescending(x => x.Record.VersionMajor)
                         .ThenByDescending(x => x.Record.VersionMinor)
-                        .ThenByDescending(x => x.Record.VersionBuild)
-                        // SemVer order alphabetically on the last segment
-                        .ThenByDescending(x => x.Record.VersionRevision.ToString())
+                        .ThenByDescending(x => x.Record.VersionPatch)
                         .ToList();
 
                     return shapeHelper.Parts_Package_PackageVersions(Package: part, PackageVersions: versions);

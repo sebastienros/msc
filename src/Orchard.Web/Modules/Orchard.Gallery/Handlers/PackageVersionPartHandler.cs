@@ -4,6 +4,7 @@ using Orchard.ContentManagement;
 using Orchard.ContentManagement.Handlers;
 using Orchard.Data;
 using Orchard.Gallery.Models;
+using Orchard.Gallery.Utils;
 
 namespace Orchard.Gallery.Handlers {
     public class PackageVersionPartHandler : ContentHandler {
@@ -16,18 +17,17 @@ namespace Orchard.Gallery.Handlers {
         }
 
         public void UpdateStorage(ContentContextBase context, PackageVersionPart part) {
-            var version = Version.Parse(part.Version);
+            var version = SemVersion.Parse(part.Version);
             part.Record.VersionMajor = version.Major;
             part.Record.VersionMinor = version.Minor;
-            part.Record.VersionBuild = version.Build;
-            part.Record.VersionRevision = version.Revision;
+            part.Record.VersionPatch = version.Patch;
 
             // Update package information
             var container = part.CommonPart.Container.As<PackagePart>();
             if (container != null) {
                 part.Record.PackageVersionId = container.PackageId.ToLowerInvariant() + "/" + part.Version;
 
-                if (Version.Parse(container.LatestVersion) < version) {
+                if (String.IsNullOrEmpty(container.LatestVersion) || SemVersion.Parse(container.LatestVersion) < version) {
                     container.LatestVersionUtc = part.CommonPart.ModifiedUtc.Value;
                     container.LatestVersion = part.Version;
                 }

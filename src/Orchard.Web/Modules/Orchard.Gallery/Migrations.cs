@@ -8,7 +8,7 @@ namespace Orchard.Gallery {
             SchemaBuilder.CreateTable("PackagePartRecord",
                 table => table
                     .ContentPartRecord()
-                    .Column<string>("PackageId", c => c.WithLength(1024).Unique())
+                    .Column<string>("PackageId", c => c.WithLength(1024))
                 );
 
             SchemaBuilder.CreateTable("PackageVersionPartRecord",
@@ -16,9 +16,8 @@ namespace Orchard.Gallery {
                     .ContentPartRecord()
                     .Column<int>("VersionMajor", c => c.WithDefault(0))
                     .Column<int>("VersionMinor", c => c.WithDefault(0))
-                    .Column<int>("VersionBuild", c => c.WithDefault(0))
-                    .Column<int>("VersionRevision", c => c.WithDefault(0))
-                    .Column<string>("PackageVersionId", c => c.WithLength(1024).Unique())
+                    .Column<string>("VersionPatch", c => c.WithLength(255))
+                    .Column<string>("PackageVersionId", c => c.WithLength(1024))
                 );
 
             return 1;

@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\favicon.ico" />
+    <Content Include="Content\moduleDefaultIcon.png" />
     <Content Include="Properties\AssemblyInfo.cs" />
     <Content Include="Styles\styles.css" />
     <Content Include="Styles\styles.min.css" />

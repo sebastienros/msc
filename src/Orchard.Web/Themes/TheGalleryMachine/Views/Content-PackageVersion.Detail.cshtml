@@ -13,6 +13,9 @@
     <div class="col-sm-8">
         <h1>
             @Html.TitleForPage(Html.ItemDisplayText(packagePart)) <span class="package-version">@packageVersionPart.Version</span>
+            @if (AuthorizedFor(Orchard.Core.Contents.Permissions.EditContent, packageVersionPart)) {
+                <a href="@Url.ItemEditUrl(packageVersionPart.ContentItem)" role="button" class="hidden-xs pull-right btn btn-secondary"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> @T("Edit")</a>
+            }
             <a href="@Url.Action("Download", "PackageVersion", new { id = packageId, version = packageVersionPart.Version, area = "Orchard.Gallery" })" role="button" rel="nofollow" class="hidden-xs pull-right btn btn-default"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> @T("Download")</a>
             <span class="package-summary">
                 @packagePart.Summary
