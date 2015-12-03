@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -28,7 +26,6 @@ namespace Orchard.OutputCache.Filters {
 
         private static string _refreshKey = "__r";
         private static long _epoch = new DateTime(2014, DateTimeKind.Utc).Ticks;
-        private static readonly ConcurrentDictionary<string, object> _cacheKeyLocks = new ConcurrentDictionary<string, object>();
 
         // Dependencies.
         private readonly ICacheManager _cacheManager;
@@ -101,68 +98,52 @@ namespace Orchard.OutputCache.Filters {
 
             Logger.Debug("Cache key '{0}' was created.", _cacheKey);
 
-            // The cache key lock for a given cache key is used to synchronize requests to
-            // ensure only a single request is regenerating the item.
-            var cacheKeyLock = _cacheKeyLocks.GetOrAdd(_cacheKey, x => new object());
+            // Is there a cached item, and are we allowed to serve it?
+            var allowServeFromCache = filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || CacheSettings.IgnoreNoCache;
+            var cacheItem = GetCacheItem(_cacheKey);
+            if (allowServeFromCache && cacheItem != null) {
 
-            try {
+                Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
 
-                // Is there a cached item, and are we allowed to serve it?
-                var allowServeFromCache = filterContext.RequestContext.HttpContext.Request.Headers["Cache-Control"] != "no-cache" || CacheSettings.IgnoreNoCache;
-                var cacheItem = GetCacheItem(_cacheKey);
-                if (allowServeFromCache && cacheItem != null) {
+                // Is the cached item in its grace period?
+                if (cacheItem.IsInGracePeriod(_now)) {
 
-                    Logger.Debug("Item '{0}' was found in cache.", _cacheKey);
-
-                    // Is the cached item in its grace period?
-                    if (cacheItem.IsInGracePeriod(_now)) {
-
-                        // Render the content unless another request is already doing so.
-                        if (Monitor.TryEnter(cacheKeyLock)) {
-                            Logger.Debug("Item '{0}' is in grace period and not currently being rendered; rendering item...", _cacheKey);
-                            BeginRenderItem(filterContext);
-                            return;
-                        }
-                    }
-
-                    // Cached item is not yet in its grace period, or is already being
-                    // rendered by another request; serve it from cache.
-                    Logger.Debug("Serving item '{0}' from cache.", _cacheKey);
-                    ServeCachedItem(filterContext, cacheItem);
-                    return;
-                }
-
-                // No cached item found, or client doesn't want it; acquire the cache key
-                // lock to render the item.
-                Logger.Debug("Item '{0}' was not found in cache or client refuses it. Acquiring cache key lock...", _cacheKey);
-                if (Monitor.TryEnter(cacheKeyLock, TimeSpan.FromSeconds(20))) {
-                    Logger.Debug("Cache key lock for item '{0}' was acquired.", _cacheKey);
-
-                    // Item might now have been rendered and cached by another request; if so serve it from cache.
-                    if (allowServeFromCache) {
-                        cacheItem = GetCacheItem(_cacheKey);
-                        if (cacheItem != null) {
-                            Logger.Debug("Item '{0}' was now found; releasing cache key lock and serving from cache.", _cacheKey);
-                            Monitor.Exit(cacheKeyLock);
-                            ServeCachedItem(filterContext, cacheItem);
-                            return;
-                        }
+                    // Render the content unless another request is already doing so.
+                    lock (String.Intern(_cacheKey)) {
+                        Logger.Debug("Item '{0}' is in grace period and not currently being rendered; rendering item...", _cacheKey);
+                        BeginRenderItem(filterContext);
+                        return;
                     }
                 }
 
-                // Either we acquired the cache key lock and the item was still not in cache, or
-                // the lock acquisition timed out. In either case render the item.
-                Logger.Debug("Rendering item '{0}'...", _cacheKey);
-                BeginRenderItem(filterContext);
+                // Cached item is not yet in its grace period, or is already being
+                // rendered by another request; serve it from cache.
+                Logger.Debug("Serving item '{0}' from cache.", _cacheKey);
+                ServeCachedItem(filterContext, cacheItem);
+                return;
+            }
 
+            // No cached item found, or client doesn't want it; acquire the cache key
+            // lock to render the item.
+            Logger.Debug("Item '{0}' was not found in cache or client refuses it. Acquiring cache key lock...", _cacheKey);
+            lock (String.Intern(_cacheKey)) {
+                Logger.Debug("Cache key lock for item '{0}' was acquired.", _cacheKey);
+
+                // Item might now have been rendered and cached by another request; if so serve it from cache.
+                if (allowServeFromCache) {
+                    cacheItem = GetCacheItem(_cacheKey);
+                    if (cacheItem != null) {
+                        Logger.Debug("Item '{0}' was now found.", _cacheKey);
+                        ServeCachedItem(filterContext, cacheItem);
+                        return;
+                    }
+                }
             }
-            catch {
-                // Remember to release the cache key lock in the event of an exception!
-                Logger.Debug("Exception occurred for item '{0}'; releasing any acquired lock.", _cacheKey);
-                if (Monitor.IsEntered(cacheKeyLock))
-                    Monitor.Exit(cacheKeyLock);
-                throw;
-            }
+
+            // Either we acquired the cache key lock and the item was still not in cache, or
+            // the lock acquisition timed out. In either case render the item.
+            Logger.Debug("Rendering item '{0}'...", _cacheKey);
+            BeginRenderItem(filterContext);
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext) {
@@ -174,96 +155,76 @@ namespace Orchard.OutputCache.Filters {
 
         public void OnResultExecuted(ResultExecutedContext filterContext) {
 
-            var captureHandlerIsAttached = false;
+            // This filter is not reentrant (multiple executions within the same request are
+            // not supported) so child actions are ignored completely.
+            if (filterContext.IsChildAction || !_isCachingRequest)
+                return;
 
-            try {
+            Logger.Debug("Item '{0}' was rendered.", _cacheKey);
 
-                // This filter is not reentrant (multiple executions within the same request are
-                // not supported) so child actions are ignored completely.
-                if (filterContext.IsChildAction || !_isCachingRequest)
-                    return;
-
-                Logger.Debug("Item '{0}' was rendered.", _cacheKey);
-
-                // Obtain individual route configuration, if any.
-                CacheRouteConfig configuration = null;
-                var configurations = _cacheService.GetRouteConfigs();
-                if (configurations.Any()) {
-                    var route = filterContext.Controller.ControllerContext.RouteData.Route;
-                    var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
-                    configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
-                }
-
-                if (!ResponseIsCacheable(filterContext, configuration)) {
-                    filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    filterContext.HttpContext.Response.Cache.SetNoStore();
-                    filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
-                    return;
-                }
-
-                // Determine duration and grace time.
-                var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : CacheSettings.DefaultCacheDuration;
-                var cacheGraceTime = configuration != null && configuration.GraceTime.HasValue ? configuration.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
-
-                // Include each content item ID as tags for the cache entry.
-                var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
-
-                // Capture the response output using a custom filter stream.
-                var response = filterContext.HttpContext.Response;
-                var captureStream = new CaptureStream(response.Filter);
-                response.Filter = captureStream;
-                captureStream.Captured += (output) => {
-                    try {
-                        // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
-                        // cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed."
-                        // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
-                        // should be resolved from it.
-
-                        using (var scope = _workContextAccessor.CreateWorkContextScope()) {
-                            var cacheItem = new CacheItem() {
-                                CachedOnUtc = _now,
-                                Duration = cacheDuration,
-                                GraceTime = cacheGraceTime,
-                                Output = output,
-                                ContentType = response.ContentType,
-                                QueryString = filterContext.HttpContext.Request.Url.Query,
-                                CacheKey = _cacheKey,
-                                InvariantCacheKey = _invariantCacheKey,
-                                Url = filterContext.HttpContext.Request.Url.AbsolutePath,
-                                Tenant = scope.Resolve<ShellSettings>().Name,
-                                StatusCode = response.StatusCode,
-                                Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
-                            };
-
-                            // Write the rendered item to the cache.
-                            var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
-                            cacheStorageProvider.Remove(_cacheKey);
-                            cacheStorageProvider.Set(_cacheKey, cacheItem);
-
-                            Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
-
-                            // Also add the item tags to the tag cache.
-                            var tagCache = scope.Resolve<ITagCache>();
-                            foreach (var tag in cacheItem.Tags) {
-                                tagCache.Tag(tag, _cacheKey);
-                            }
-                        }
-                    }
-                    finally {
-                        // Always release the cache key lock when the request ends.
-                        ReleaseCacheKeyLock();
-                    }
-                };
-
-                captureHandlerIsAttached = true;
+            // Obtain individual route configuration, if any.
+            CacheRouteConfig configuration = null;
+            var configurations = _cacheService.GetRouteConfigs();
+            if (configurations.Any()) {
+                var route = filterContext.Controller.ControllerContext.RouteData.Route;
+                var key = _cacheService.GetRouteDescriptorKey(filterContext.HttpContext, route);
+                configuration = configurations.FirstOrDefault(c => c.RouteKey == key);
             }
-            finally {
-                // If the response filter stream capture handler was attached then we'll trust
-                // it to release the cache key lock at some point in the future when the stream
-                // is flushed; otherwise we'll make sure we'll release it here.
-                if (!captureHandlerIsAttached)
-                    ReleaseCacheKeyLock();
+
+            if (!ResponseIsCacheable(filterContext, configuration)) {
+                filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                filterContext.HttpContext.Response.Cache.SetNoStore();
+                filterContext.HttpContext.Response.Cache.SetMaxAge(new TimeSpan(0));
+                return;
             }
+
+            // Determine duration and grace time.
+            var cacheDuration = configuration != null && configuration.Duration.HasValue ? configuration.Duration.Value : CacheSettings.DefaultCacheDuration;
+            var cacheGraceTime = configuration != null && configuration.GraceTime.HasValue ? configuration.GraceTime.Value : CacheSettings.DefaultCacheGraceTime;
+
+            // Include each content item ID as tags for the cache entry.
+            var contentItemIds = _displayedContentItemHandler.GetDisplayed().Select(x => x.ToString(CultureInfo.InvariantCulture)).ToArray();
+
+            // Capture the response output using a custom filter stream.
+            var response = filterContext.HttpContext.Response;
+            var captureStream = new CaptureStream(response.Filter);
+            response.Filter = captureStream;
+            captureStream.Captured += (output) => {
+                // Since this is a callback any call to injected dependencies can result in an Autofac exception: "Instances 
+                // cannot be resolved and nested lifetimes cannot be created from this LifetimeScope as it has already been disposed."
+                // To prevent access to the original lifetime scope a new work context scope should be created here and dependencies
+                // should be resolved from it.
+
+                using (var scope = _workContextAccessor.CreateWorkContextScope()) {
+                    var cacheItem = new CacheItem() {
+                        CachedOnUtc = _now,
+                        Duration = cacheDuration,
+                        GraceTime = cacheGraceTime,
+                        Output = output,
+                        ContentType = response.ContentType,
+                        QueryString = filterContext.HttpContext.Request.Url.Query,
+                        CacheKey = _cacheKey,
+                        InvariantCacheKey = _invariantCacheKey,
+                        Url = filterContext.HttpContext.Request.Url.AbsolutePath,
+                        Tenant = scope.Resolve<ShellSettings>().Name,
+                        StatusCode = response.StatusCode,
+                        Tags = new[] { _invariantCacheKey }.Union(contentItemIds).ToArray()
+                    };
+
+                    // Write the rendered item to the cache.
+                    var cacheStorageProvider = scope.Resolve<IOutputCacheStorageProvider>();
+                    cacheStorageProvider.Remove(_cacheKey);
+                    cacheStorageProvider.Set(_cacheKey, cacheItem);
+
+                    Logger.Debug("Item '{0}' was written to cache.", _cacheKey);
+
+                    // Also add the item tags to the tag cache.
+                    var tagCache = scope.Resolve<ITagCache>();
+                    foreach (var tag in cacheItem.Tags) {
+                        tagCache.Tag(tag, _cacheKey);
+                    }
+                }
+            };
         }
 
         protected virtual bool RequestIsCacheable(ActionExecutingContext filterContext) {
@@ -538,17 +499,7 @@ namespace Orchard.OutputCache.Filters {
                 response.Cache.VaryByHeaders[varyRequestHeader] = true;
             }
         }
-
-        private void ReleaseCacheKeyLock() {
-            if (_cacheKey != null) {
-                object cacheKeyLock;
-                if (_cacheKeyLocks.TryGetValue(_cacheKey, out cacheKeyLock) && Monitor.IsEntered(cacheKeyLock)) {
-                    Logger.Debug("Releasing cache key lock for item '{0}'.", _cacheKey);
-                    Monitor.Exit(cacheKeyLock);
-                }
-            }
-        }
-
+        
         protected virtual bool IsIgnoredUrl(string url, IEnumerable<string> ignoredUrls) {
             if (ignoredUrls == null || !ignoredUrls.Any()) {
                 return false;
