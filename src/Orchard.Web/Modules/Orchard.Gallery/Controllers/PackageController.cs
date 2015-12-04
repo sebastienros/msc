@@ -59,11 +59,13 @@ namespace Orchard.Gallery.Controllers {
             var searchBuilder = GetSearchBuilder();
 
             if (!String.IsNullOrWhiteSpace(q)) {
-                searchBuilder.Parse(
-                    defaultFields: new[] { "body", "title", "tags", "package-id" },
-                    query: q,
-                    escape: true
-                );
+                foreach (var field in new[] { "body", "title", "tags", "package-id" }) {
+                    searchBuilder.Parse(
+                        defaultField: field,
+                        query: q,
+                        escape: true
+                    ).AsFilter();
+                }
             }
 
             searchBuilder.WithField("package-extension-type", type.ToLowerInvariant()).NotAnalyzed().ExactMatch();
@@ -79,6 +81,9 @@ namespace Orchard.Gallery.Controllers {
                         // Order by relevance by default.
                         break;
                 }
+            }
+            else if(String.IsNullOrWhiteSpace(q) && String.IsNullOrWhiteSpace(s)) {
+                searchBuilder.SortByInteger("package-download-count");
             }
 
             var count = searchBuilder.Count();
