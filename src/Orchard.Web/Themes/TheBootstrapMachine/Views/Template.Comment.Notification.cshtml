@@ -1,5 +1,6 @@
-﻿@using Orchard.ContentManagement;
+@using Orchard.ContentManagement;
 @using Orchard.Comments.Models;
+@using Orchard.Mvc.Extensions;
 
 @{
     CommentPart commentPart = Model.CommentPart;
@@ -22,7 +23,7 @@ A new comment on @Html.ItemDisplayLink(commentedOn) is available. <br/> <br/>
 <br />
 <br />
  
-Click to <a href="@commentUrl">View</a> | 
+Click to <a href="@Url.MakeAbsolute(commentUrl)">View</a> | 
 @if (commentPart.Status == CommentStatus.Pending) {
     @T("<a href=\"{0}\">Approve</a> ", approveUrl) <text>|</text>
 }
